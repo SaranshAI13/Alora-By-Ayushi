@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, ArrowRight, ShieldCheck, Truck, Gift, MessageCircle } from 'lucide-react';
+import { Sparkles, ArrowRight, MessageCircle } from 'lucide-react';
 import { StoreSettings } from '../types';
 
 interface HeroProps {
@@ -14,12 +14,12 @@ export const Hero: React.FC<HeroProps> = ({ settings, onExplore }) => {
       <div className="absolute top-10 left-1/4 w-96 h-96 bg-[#D4AF37]/10 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-[#E8B4B8]/15 rounded-full blur-3xl pointer-events-none"></div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-24 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-14 sm:py-20 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left Hero Text */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <div className="inline-flex items-center space-x-2 bg-white/80 border border-[#D5C7B3] px-3.5 py-1.5 rounded-full shadow-sm">
+            <div className="inline-flex items-center space-x-2 bg-white/80 border border-[#D5C7B3] px-4 py-1.5 rounded-full shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
               <span className="text-[11px] font-semibold tracking-widest uppercase text-[#B8860B]">
                 Curated Luxury By Ayushi
@@ -36,7 +36,7 @@ export const Hero: React.FC<HeroProps> = ({ settings, onExplore }) => {
 
             <p className="text-sm sm:text-base text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
               Indulge in certified Austrian Swarovski jewelry, designer dresses, and boutique statement accessories. 
-              Handcrafted for contemporary women who deserve to sparkle unconditionally.
+              Handcrafted for contemporary women who love to shine with effortless grace.
             </p>
 
             {/* Call To Actions */}
@@ -80,23 +80,23 @@ export const Hero: React.FC<HeroProps> = ({ settings, onExplore }) => {
           {/* Right Hero Visual (Editorial Magazine Showcase) */}
           <div className="lg:col-span-5 relative">
             <div className="relative mx-auto max-w-sm sm:max-w-md">
-              {/* Outer Glow Card */}
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+              {/* Main Showcase Card */}
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-white">
                 <img
                   src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1000&auto=format&fit=crop"
                   alt="Alora Swarovski Pendant"
-                  className="w-full h-[460px] sm:h-[500px] object-cover hover:scale-105 transition-transform duration-700"
+                  className="w-full h-[440px] sm:h-[480px] object-cover hover:scale-105 transition-transform duration-700"
                 />
 
                 {/* Floating Badge on Card */}
-                <div className="absolute bottom-5 left-5 right-5 bg-white/90 backdrop-blur-md rounded-2xl p-4 border border-[#EADFCF] shadow-lg flex items-center justify-between">
+                <div className="absolute bottom-5 left-5 right-5 bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-[#EADFCF] shadow-lg flex items-center justify-between">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-widest text-[#B8860B]">
                       Signature Drop
                     </span>
-                    <h2 className="font-serif text-sm font-bold text-[#141416]">
+                    <h3 className="font-serif text-sm font-bold text-[#141416]">
                       Austrian Starlight Solitaire
-                    </h2>
+                    </h3>
                     <span className="text-xs font-semibold text-[#141416]">
                       ₹1,899 <span className="text-gray-400 line-through text-[11px]">₹2,899</span>
                     </span>
@@ -111,13 +111,24 @@ export const Hero: React.FC<HeroProps> = ({ settings, onExplore }) => {
                 </div>
               </div>
 
+              {/* Floating Real Boutique Logo Badge */}
+              <div className="absolute -top-5 -left-5 bg-white shadow-xl rounded-2xl p-2.5 border-2 border-[#D4AF37]/50 hidden sm:flex items-center space-x-2.5 animate-float backdrop-blur-md">
+                <div className="w-10 h-10 rounded-full overflow-hidden shadow-inner ring-1 ring-[#D4AF37]">
+                  <img src="/alora-logo-circle.png" alt="Alora Emblem" className="w-full h-full object-cover" />
+                </div>
+                <div className="pr-2">
+                  <p className="text-[10px] font-bold text-[#B8860B] uppercase tracking-wider">Official Boutique</p>
+                  <p className="text-xs font-serif font-bold text-[#141416]">Alora by Ayushi</p>
+                </div>
+              </div>
+
               {/* Floating Instagram Accent Pill */}
-              <div className="absolute -top-4 -right-4 bg-white shadow-xl rounded-2xl p-3 border border-[#EADFCF] hidden sm:flex items-center space-x-2 animate-float">
+              <div className="absolute -bottom-4 -right-4 bg-white shadow-xl rounded-2xl p-3 border border-[#EADFCF] hidden sm:flex items-center space-x-2">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-                  ✨
+                  📸
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-gray-500">Instagram Shop</p>
+                  <p className="text-[10px] font-bold text-gray-500">Instagram</p>
                   <p className="text-xs font-bold text-[#141416]">@alora_by_ayushi_</p>
                 </div>
               </div>

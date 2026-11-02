@@ -1,6 +1,7 @@
 import React from 'react';
-import { Sparkles, Instagram, MessageCircle, Heart, Lock } from 'lucide-react';
+import { Instagram, MessageCircle, Heart, Lock } from 'lucide-react';
 import { StoreSettings } from '../types';
+import { Logo } from './Logo';
 
 interface FooterProps {
   settings: StoreSettings;
@@ -16,19 +17,14 @@ export const Footer: React.FC<FooterProps> = ({ settings, onOpenAdmin, onSelectC
         {/* Top 3-Column Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
           
-          {/* Brand Info */}
+          {/* Brand Info with Official Logo Emblem */}
           <div className="md:col-span-5 space-y-4 text-center md:text-left">
-            <div className="flex flex-col items-center md:items-start">
-              <span className="font-serif text-3xl font-extrabold tracking-[0.25em] text-[#FAF7F2]">
-                ALORA
-              </span>
-              <span className="font-sans text-[10px] tracking-[0.35em] text-[#D4AF37] uppercase font-semibold">
-                BY AYUSHI
-              </span>
+            <div className="flex justify-center md:justify-start">
+              <Logo size="lg" showBadge={true} theme="dark" />
             </div>
 
             <p className="text-xs text-gray-400 max-w-sm leading-relaxed">
-              Curated luxury boutique showcasing certified Austrian Swarovski crystal jewelry, bespoke designer clothing, and high-glamour accessories. Made with love for empowered women.
+              Curated luxury boutique showcasing certified Austrian Swarovski crystal jewelry, bespoke designer clothing, and high-glamour accessories. Handcrafted with passion by Ayushi.
             </p>
 
             <div className="flex items-center justify-center md:justify-start space-x-3 pt-2">
@@ -94,7 +90,7 @@ export const Footer: React.FC<FooterProps> = ({ settings, onOpenAdmin, onSelectC
               Ayushi's Concierge
             </h4>
             <p className="text-gray-400 leading-relaxed">
-              Have questions about sizing, customization, or gift packaging? Chat directly with Ayushi.
+              Have questions about sizing, customization, or gift packaging? Chat directly with Ayushi on WhatsApp.
             </p>
             <a
               href={`https://wa.me/${settings.whatsappNumber}?text=Hi%20Ayushi!%20Need%20some%20assistance%20picking%20a%20gift.`}
@@ -112,12 +108,12 @@ export const Footer: React.FC<FooterProps> = ({ settings, onOpenAdmin, onSelectC
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between text-[11px] text-gray-500 gap-4">
           <p>
-            © {new Date().getFullYear()} <strong className="text-gray-300">Alora by Ayushi</strong>. All Rights Reserved. Handcrafted with passion.
+            © {new Date().getFullYear()} <strong className="text-gray-300">Alora by Ayushi</strong>. All Rights Reserved.
           </p>
 
           <div className="flex items-center space-x-4">
             <span className="flex items-center space-x-1">
-              <span>Made with</span>
+              <span>Handcrafted with</span>
               <Heart className="w-3 h-3 text-rose-500 fill-current inline" />
               <span>for Ayushi</span>
             </span>

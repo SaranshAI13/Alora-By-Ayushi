@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Sparkles, Heart, Search, Instagram, MessageCircle, Lock, ShoppingBag, Menu, X } from 'lucide-react';
+import { Sparkles, Heart, Search, Instagram, MessageCircle, Lock, Menu, X } from 'lucide-react';
 import { StoreSettings } from '../types';
+import { Logo } from './Logo';
 
 interface NavbarProps {
   settings: StoreSettings;
@@ -51,7 +52,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       )}
 
       {/* Main Brand Bar */}
-      <div className="glass-nav border-b border-[#EADFCF] px-4 sm:px-8 py-3.5 transition-all">
+      <div className="glass-nav border-b border-[#EADFCF] px-4 sm:px-8 py-3 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
           {/* Mobile Menu Button */}
@@ -83,23 +84,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                   setSearchTerm(e.target.value);
                   onSearch(e.target.value);
                 }}
-                className="w-full bg-white/70 border border-[#D5C7B3] rounded-full pl-9 pr-4 py-1.5 text-xs text-[#141416] placeholder-gray-500 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all"
+                className="w-full bg-white/80 border border-[#D5C7B3] rounded-full pl-9 pr-4 py-2 text-xs text-[#141416] placeholder-gray-500 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all shadow-inner"
               />
               <Search className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
             </form>
           </div>
 
-          {/* Center Luxury Logo */}
-          <div className="flex-1 text-center md:flex-initial">
-            <a href="#" className="inline-block group">
-              <div className="flex flex-col items-center">
-                <span className="font-serif text-2xl sm:text-3xl font-extrabold tracking-[0.25em] text-[#141416] group-hover:text-[#AA771C] transition-colors">
-                  ALORA
-                </span>
-                <span className="font-sans text-[10px] tracking-[0.35em] text-[#B8860B] uppercase font-semibold -mt-0.5">
-                  BY AYUSHI
-                </span>
-              </div>
+          {/* Center Luxury Logo with Signboard Emblem */}
+          <div className="flex-1 text-center md:flex-initial flex justify-center">
+            <a href="#" className="inline-block">
+              <Logo size="md" showBadge={true} />
             </a>
           </div>
 
@@ -110,7 +104,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               href={settings.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:flex items-center space-x-1.5 text-xs font-medium text-[#141416] hover:text-[#E1306C] transition-colors px-2 py-1 rounded-full hover:bg-white/60"
+              className="hidden sm:flex items-center space-x-1.5 text-xs font-medium text-[#141416] hover:text-[#E1306C] transition-colors px-2.5 py-1.5 rounded-full hover:bg-white/80 shadow-sm border border-transparent hover:border-[#E1306C]/20"
               title="Visit Instagram @alora_by_ayushi_"
             >
               <Instagram className="w-4 h-4 text-[#E1306C]" />
@@ -122,11 +116,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               href={`https://wa.me/${settings.whatsappNumber}?text=Hi%20Ayushi!%20I'm%20visiting%20Alora%20online%20and%20would%20love%20to%20know%20more%20about%20your%20collection.`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-1 text-xs font-semibold text-[#141416] hover:text-[#25D366] transition-colors px-2.5 py-1.5 rounded-full hover:bg-[#25D366]/10 border border-transparent hover:border-[#25D366]/30"
+              className="flex items-center space-x-1.5 text-xs font-semibold text-[#141416] hover:text-[#25D366] transition-colors px-3 py-1.5 rounded-full bg-white/70 hover:bg-[#25D366]/10 border border-[#EADFCF] hover:border-[#25D366]/30 shadow-sm"
               title="Chat on WhatsApp"
             >
               <MessageCircle className="w-4 h-4 text-[#25D366]" />
-              <span className="hidden sm:inline text-[11px]">Chat</span>
+              <span className="hidden sm:inline text-[11px]">WhatsApp</span>
             </a>
 
             {/* Wishlist Button */}
@@ -152,7 +146,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               aria-label="Admin Portal"
             >
               <Lock className="w-4 h-4" />
-              <span className="hidden xl:inline text-[10px] font-semibold uppercase tracking-wider">Admin</span>
+              <span className="hidden xl:inline text-[10px] font-semibold uppercase tracking-wider">Owner</span>
             </button>
           </div>
         </div>
@@ -178,7 +172,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Desktop Category Navigation */}
-      <nav className="hidden md:block bg-[#FAF7F2] border-b border-[#EADFCF] px-4 py-2">
+      <nav className="hidden md:block bg-[#FAF7F2] border-b border-[#EADFCF] px-4 py-2.5">
         <div className="max-w-7xl mx-auto flex items-center justify-center space-x-6 lg:space-x-8 overflow-x-auto text-xs tracking-wider uppercase font-semibold text-[#4A4A4A]">
           {categories.map((cat) => (
             <button
@@ -195,8 +189,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Drawer Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#FFFDF9] border-b border-[#EADFCF] px-6 py-4 space-y-3 animate-fadeIn">
-          <p className="text-[11px] font-bold text-[#B8860B] tracking-widest uppercase">Categories</p>
+        <div className="md:hidden bg-[#FFFDF9] border-b border-[#EADFCF] px-6 py-4 space-y-4 animate-fadeIn shadow-lg">
+          <p className="text-[11px] font-bold text-[#B8860B] tracking-widest uppercase">Explore Collections</p>
           <div className="grid grid-cols-2 gap-2 text-xs font-medium text-[#141416]">
             {categories.map((cat) => (
               <button
@@ -230,7 +224,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center space-x-1 text-gray-500 font-semibold"
             >
               <Lock className="w-3.5 h-3.5" />
-              <span>Admin Login</span>
+              <span>Owner Portal</span>
             </button>
           </div>
         </div>
