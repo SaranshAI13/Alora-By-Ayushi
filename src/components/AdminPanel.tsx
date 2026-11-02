@@ -52,7 +52,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   // Add / Edit Product Form State
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
-  const [category, setCategory] = useState<string>(categories[1] || '👗 Designer & Branded Clothing');
+  const [category, setCategory] = useState<string>(categories.find(c => c !== 'All') || 'Designer Clothing');
   const [price, setPrice] = useState<string>('');
   const [originalPrice, setOriginalPrice] = useState<string>('');
   const [description, setDescription] = useState('');
@@ -164,7 +164,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const resetForm = () => {
     setEditingId(null);
     setName('');
-    setCategory(categories[1] || '👗 Designer & Branded Clothing');
+    setCategory(categories.find(c => c !== 'All') || 'Designer Clothing');
     setPrice('');
     setOriginalPrice('');
     setDescription('');
@@ -706,7 +706,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <div className="pt-2">
                       <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1.5">Quick Presets:</p>
                       <div className="flex flex-wrap gap-1.5">
-                        {['👠 Branded Footwear', '🌸 Luxury Perfumes & Mists', '🕶️ Designer Sunglasses', '👑 Party Wear Tops', '💄 Beauty & Glamour'].map((preset) => (
+                        {['Branded Footwear & Heels', 'Luxury Perfumes', 'Designer Sunglasses', 'Party Wear & Tops', 'Beauty & Glamour'].map((preset) => (
                           <button
                             type="button"
                             key={preset}

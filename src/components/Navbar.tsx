@@ -6,6 +6,8 @@ import { Logo } from './Logo';
 interface NavbarProps {
   settings: StoreSettings;
   wishlistCount: number;
+  categories: string[];
+  selectedCategory: string;
   onOpenAdmin: () => void;
   onSearch: (query: string) => void;
   onSelectCategory: (cat: string) => void;
@@ -15,6 +17,8 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   settings,
   wishlistCount,
+  categories,
+  selectedCategory,
   onOpenAdmin,
   onSearch,
   onSelectCategory,
@@ -28,17 +32,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     e.preventDefault();
     onSearch(searchTerm);
   };
-
-  const categories = [
-    'All',
-    'Designer Clothing',
-    'Swarovski Jewellery',
-    'Necklaces & Chokers',
-    'Earrings & Jhumkas',
-    'Bracelets & Bangles',
-    'Rings',
-    'Bags & Accessories'
-  ];
 
   return (
     <header className="sticky top-0 z-40 w-full shadow-sm">
@@ -181,19 +174,28 @@ export const Navbar: React.FC<NavbarProps> = ({
         )}
       </div>
 
-      {/* Desktop Category Navigation */}
-      <nav className="hidden md:block bg-[#FAF7F2] border-b border-[#EADFCF] px-4 py-2">
-        <div className="max-w-7xl mx-auto flex items-center justify-center space-x-6 lg:space-x-8 overflow-x-auto text-xs tracking-wider uppercase font-semibold text-[#4A4A4A]">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => onSelectCategory(cat)}
-              className="py-1 hover:text-[#D4AF37] transition-colors relative group whitespace-nowrap"
-            >
-              <span>{cat}</span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#D4AF37] transition-all group-hover:w-full"></span>
-            </button>
-          ))}
+      {/* Luxury Category Navigation Bar (Visible on Desktop & Mobile) */}
+      <nav className="bg-[#FAF7F2] border-b border-[#EADFCF] px-3 sm:px-8 py-2">
+        <div className="max-w-7xl mx-auto flex items-center justify-start md:justify-center space-x-5 sm:space-x-8 overflow-x-auto scrollbar-none text-[11px] sm:text-xs tracking-wider uppercase font-semibold text-[#4A4A4A]">
+          {categories.map((cat) => {
+            const isActive = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => onSelectCategory(cat)}
+                className={`py-1.5 transition-all relative group whitespace-nowrap flex-shrink-0 ${
+                  isActive ? 'text-[#B8860B] font-bold' : 'text-[#4A4A4A] hover:text-[#D4AF37]'
+                }`}
+              >
+                <span>{cat}</span>
+                <span
+                  className={`absolute bottom-0 left-0 h-0.5 bg-[#D4AF37] transition-all ${
+                    isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}
+                ></span>
+              </button>
+            );
+          })}
         </div>
       </nav>
 
@@ -218,18 +220,25 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <p className="text-[11px] font-bold text-[#B8860B] tracking-widest uppercase">Explore Collections</p>
           <div className="grid grid-cols-2 gap-2 text-xs font-medium text-[#141416]">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => {
-                  onSelectCategory(cat);
-                  setMobileMenuOpen(false);
-                }}
-                className="text-left py-2 px-3 rounded-xl bg-white border border-[#EADFCF]/60 hover:bg-[#FAF7F2] hover:text-[#D4AF37] transition-all"
-              >
-                {cat}
-              </button>
-            ))}
+            {categories.map((cat) => {
+              const isActive = selectedCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    onSelectCategory(cat);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`text-left py-2 px-3 rounded-xl border transition-all ${
+                    isActive
+                      ? 'bg-[#141416] text-[#FAF7F2] border-[#141416] font-bold'
+                      : 'bg-white border-[#EADFCF]/60 text-gray-700 hover:bg-[#FAF7F2] hover:text-[#D4AF37]'
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
           </div>
 
           <div className="pt-2 border-t border-[#EADFCF] flex justify-between items-center text-xs">

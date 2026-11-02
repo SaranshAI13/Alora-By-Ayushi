@@ -5,11 +5,21 @@ import { Logo } from './Logo';
 
 interface FooterProps {
   settings: StoreSettings;
+  categories?: string[];
   onOpenAdmin: () => void;
   onSelectCategory: (category: string) => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ settings, onOpenAdmin, onSelectCategory }) => {
+export const Footer: React.FC<FooterProps> = ({ settings, categories = [], onOpenAdmin, onSelectCategory }) => {
+  const displayCategories = categories.filter(c => c !== 'All').slice(0, 6);
+  const fallbackCategories = [
+    'Designer Clothing',
+    'Swarovski Jewellery',
+    'Necklaces & Chokers',
+    'Bags & Accessories',
+    'Bracelets & Bangles'
+  ];
+  const listToRender = displayCategories.length > 0 ? displayCategories : fallbackCategories;
   return (
     <footer className="bg-[#141416] text-[#FAF7F2] border-t border-[#2A2A2A] pt-14 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-10">
@@ -64,31 +74,13 @@ export const Footer: React.FC<FooterProps> = ({ settings, onOpenAdmin, onSelectC
               Explore Collections
             </h4>
             <ul className="space-y-2 text-gray-400 font-medium">
-              <li>
-                <button onClick={() => onSelectCategory('Designer Clothing')} className="hover:text-white transition-colors">
-                  👗 Branded Dresses & Haute Couture
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onSelectCategory('Swarovski Jewellery')} className="hover:text-white transition-colors">
-                  💎 Austrian Swarovski Jewellery
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onSelectCategory('Necklaces & Chokers')} className="hover:text-white transition-colors">
-                  📿 Statement Chokers & Necklaces
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onSelectCategory('Bags & Accessories')} className="hover:text-white transition-colors">
-                  👜 Branded Handbags & Accessories
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onSelectCategory('Bracelets & Bangles')} className="hover:text-white transition-colors">
-                  💫 Tennis Bracelets & Bangles
-                </button>
-              </li>
+              {listToRender.map((cat) => (
+                <li key={cat}>
+                  <button onClick={() => onSelectCategory(cat)} className="hover:text-white transition-colors">
+                    {cat}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
 

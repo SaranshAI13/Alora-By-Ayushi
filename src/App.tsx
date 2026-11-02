@@ -15,7 +15,7 @@ export default function App() {
   // Categories State (Dynamic with LocalStorage persistence)
   const [categories, setCategories] = useState<string[]>(() => {
     try {
-      const saved = localStorage.getItem('alora_categories_v2');
+      const saved = localStorage.getItem('alora_categories_v3');
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error('Error loading categories', e);
@@ -72,7 +72,7 @@ export default function App() {
   // Sync categories
   useEffect(() => {
     try {
-      localStorage.setItem('alora_categories_v2', JSON.stringify(categories));
+      localStorage.setItem('alora_categories_v3', JSON.stringify(categories));
     } catch (e) {
       console.error('Failed to save categories', e);
     }
@@ -179,10 +179,12 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#FAF7F2] text-[#141416] flex flex-col font-sans pb-16 sm:pb-0">
       
-      {/* Navigation */}
+      {/* Navigation with Unified Category Bar */}
       <Navbar
         settings={settings}
         wishlistCount={wishlist.length}
+        categories={categories}
+        selectedCategory={selectedCategory}
         onOpenAdmin={() => setIsAdminOpen(true)}
         onSearch={(query) => setSearchQuery(query)}
         onSelectCategory={(cat) => {
@@ -202,39 +204,6 @@ export default function App() {
           el?.scrollIntoView({ behavior: 'smooth' });
         }}
       />
-
-      {/* VISUAL CATEGORY SHOWCASE BAR (DYNAMIC WITH AYUSHI'S CATEGORIES) */}
-      <section className="bg-white border-b border-[#EADFCF] py-4 px-4 sm:px-8 shadow-sm">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-2.5">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[#B8860B] flex items-center space-x-1.5">
-              <Grid className="w-3.5 h-3.5" />
-              <span>Explore Royal Collections 👑</span>
-            </span>
-            <span className="text-xs text-gray-400 hidden sm:inline">Swipe horizontally ➔</span>
-          </div>
-
-          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => {
-                  setSelectedCategory(cat);
-                  const el = document.getElementById('catalog-section');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all shadow-sm ${
-                  selectedCategory === cat
-                    ? 'bg-[#141416] text-[#FAF7F2] ring-2 ring-[#D4AF37]/50'
-                    : 'bg-[#FAF7F2] border border-[#EADFCF] text-gray-700 hover:border-[#D4AF37] hover:bg-white'
-                }`}
-              >
-                <span>{cat}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Main Catalog Section */}
       <section id="catalog-section" className="max-w-7xl w-full mx-auto px-3 sm:px-8 py-8 sm:py-14 space-y-6 flex-1">
@@ -314,6 +283,7 @@ export default function App() {
       {/* Footer */}
       <Footer
         settings={settings}
+        categories={categories}
         onOpenAdmin={() => setIsAdminOpen(true)}
         onSelectCategory={(cat) => {
           setSelectedCategory(cat);

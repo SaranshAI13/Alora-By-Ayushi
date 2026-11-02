@@ -2,14 +2,13 @@ import { Product, StoreSettings } from '../types';
 
 export const DEFAULT_CATEGORIES: string[] = [
   'All',
-  '👗 Designer & Branded Clothing',
-  '💎 Swarovski & Royal Jewellery',
-  '👜 Luxury Handbags & Clutches',
-  '📿 Statement Chokers & Necklaces',
-  '✨ Crystal Chandelier Earrings',
-  '💫 Tennis Bracelets & Bangles',
-  '💍 Rings & Solitaires',
-  '🎁 Bespoke Gift Sets & Combos'
+  'Designer Clothing',
+  'Swarovski Jewellery',
+  'Necklaces & Chokers',
+  'Earrings & Jhumkas',
+  'Bracelets & Bangles',
+  'Rings',
+  'Bags & Accessories'
 ];
 
 export const DEFAULT_STORE_SETTINGS: StoreSettings = {
@@ -17,9 +16,9 @@ export const DEFAULT_STORE_SETTINGS: StoreSettings = {
   tagline: 'Curated Branded Fashion, Luxury Jewellery & Royal Accessories',
   instagramHandle: 'alora_by_ayushi_',
   instagramUrl: 'https://www.instagram.com/alora_by_ayushi_?psln=bXE3cWExaHF2MHls',
-  whatsappNumber: '919667779443', // Ayushi's Direct WhatsApp
+  whatsappNumber: '919667779443',
   announcementText: '👑 100% Authenticated Branded Pieces • Custom Orders WhatsApp: +91 9667779443 👑',
-  adminPin: 'aashi12345', // Updated PIN requested by user
+  adminPin: 'aashi12345',
   currencySymbol: '₹',
   categories: DEFAULT_CATEGORIES
 };
@@ -28,14 +27,14 @@ export const INITIAL_PRODUCTS: Product[] = [
   {
     id: 'alr-001',
     name: 'Branded Champagne Mulberry Silk Evening Dress',
-    category: '👗 Designer & Branded Clothing',
+    category: 'Designer Clothing',
     price: 3499,
     originalPrice: 4999,
     images: [
       'https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=1000&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1000&auto=format&fit=crop'
     ],
-    description: 'Designer silhouette tailored in rich mulberry satin silk with draped cowl neckline. Perfect for royal cocktail evenings and weddings.',
+    description: 'Designer silhouette tailored in rich mulberry satin silk with draped cowl neckline. Perfect for cocktail evenings and weddings.',
     material: 'Pure Satin Silk, Breathable Inner Lining',
     inStock: true,
     tag: 'Bestseller',
@@ -46,14 +45,14 @@ export const INITIAL_PRODUCTS: Product[] = [
   {
     id: 'alr-002',
     name: 'Austrian Starlight Solitaire Pendant & Earring Set',
-    category: '💎 Swarovski & Royal Jewellery',
+    category: 'Swarovski Jewellery',
     price: 1899,
     originalPrice: 2899,
     images: [
       'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1000&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1000&auto=format&fit=crop'
     ],
-    description: 'Authentic precision-cut crystal set in 18k rose-gold plating with anti-tarnish finish. Comes in bespoke royal velvet casing.',
+    description: 'Authentic precision-cut crystal set in 18k rose-gold plating with anti-tarnish finish. Comes in bespoke velvet casing.',
     material: 'Austrian Crystal, 18k Rose Gold Micron Plating',
     inStock: true,
     tag: 'Swarovski Certified',
@@ -64,7 +63,7 @@ export const INITIAL_PRODUCTS: Product[] = [
   {
     id: 'alr-003',
     name: 'Quilted Pearl Micro-Crossbody Luxury Handbag',
-    category: '👜 Luxury Handbags & Clutches',
+    category: 'Bags & Accessories',
     price: 2199,
     originalPrice: 3299,
     images: [
@@ -82,7 +81,7 @@ export const INITIAL_PRODUCTS: Product[] = [
   {
     id: 'alr-004',
     name: 'Branded Floral Organza Runway Midi Dress',
-    category: '👗 Designer & Branded Clothing',
+    category: 'Designer Clothing',
     price: 2899,
     originalPrice: 3999,
     images: [
@@ -100,7 +99,7 @@ export const INITIAL_PRODUCTS: Product[] = [
   {
     id: 'alr-005',
     name: 'Emerald Aurora Royal Tennis Bracelet',
-    category: '💫 Tennis Bracelets & Bangles',
+    category: 'Bracelets & Bangles',
     price: 2499,
     originalPrice: 3499,
     images: [
@@ -118,7 +117,7 @@ export const INITIAL_PRODUCTS: Product[] = [
   {
     id: 'alr-006',
     name: 'Rose Gold Royal Duchess Statement Choker',
-    category: '📿 Statement Chokers & Necklaces',
+    category: 'Necklaces & Chokers',
     price: 3200,
     originalPrice: 4800,
     images: [
@@ -136,7 +135,7 @@ export const INITIAL_PRODUCTS: Product[] = [
   {
     id: 'alr-007',
     name: 'Celestial Diamond-Cut Chandelier Drops',
-    category: '✨ Crystal Chandelier Earrings',
+    category: 'Earrings & Jhumkas',
     price: 1450,
     originalPrice: 2199,
     images: [
@@ -154,7 +153,7 @@ export const INITIAL_PRODUCTS: Product[] = [
   {
     id: 'alr-008',
     name: 'Cushion-Cut Eternity Solitaire Sparkle Ring',
-    category: '💍 Rings & Solitaires',
+    category: 'Rings',
     price: 999,
     originalPrice: 1499,
     images: [
