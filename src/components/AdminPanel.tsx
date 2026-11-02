@@ -1,63 +1,58 @@
 import React, { useState, useRef } from 'react';
 import { 
   X, Plus, Trash2, Edit3, Image as ImageIcon, CheckCircle, 
-  Settings, Download, Upload, RefreshCw, Lock, Sparkles, MessageCircle, Instagram 
+  Settings, Download, Upload, RefreshCw, Lock, Sparkles, MessageCircle, Instagram, Tag, Grid 
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { Product, StoreSettings, Category } from '../types';
+import { Product, StoreSettings } from '../types';
 
 interface AdminPanelProps {
   isOpen: boolean;
   onClose: () => void;
   products: Product[];
   settings: StoreSettings;
+  categories: string[];
   onAddProduct: (product: Product) => void;
   onUpdateProduct: (product: Product) => void;
   onDeleteProduct: (productId: string) => void;
   onUpdateSettings: (newSettings: StoreSettings) => void;
   onResetCatalog: () => void;
   onImportCatalog: (importedProducts: Product[]) => void;
+  onAddCategory: (categoryName: string) => void;
+  onDeleteCategory: (categoryName: string) => void;
 }
 
-const CATEGORIES: Category[] = [
-  'Swarovski Jewellery',
-  'Necklaces & Chokers',
-  'Earrings & Jhumkas',
-  'Bracelets & Bangles',
-  'Rings',
-  'Designer Clothing',
-  'Bags & Accessories',
-  'Gifting & Combos'
-];
-
-const TAGS = ['Bestseller', 'Swarovski Certified', 'New Launch', 'Trending', 'Limited Edition', 'Sale'] as const;
+const TAGS = ['Bestseller', 'Swarovski Certified', 'New Launch', 'Trending', 'Limited Edition', 'Royal Choice', 'Sale'] as const;
 
 export const AdminPanel: React.FC<AdminPanelProps> = ({
   isOpen,
   onClose,
   products,
   settings,
+  categories,
   onAddProduct,
   onUpdateProduct,
   onDeleteProduct,
   onUpdateSettings,
   onResetCatalog,
-  onImportCatalog
+  onImportCatalog,
+  onAddCategory,
+  onDeleteCategory
 }) => {
   if (!isOpen) return null;
 
-  // Authentication State
+  // Authentication State with new PIN 'aashi12345'
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [enteredPin, setEnteredPin] = useState('');
   const [pinError, setPinError] = useState(false);
 
   // Tab State
-  const [activeTab, setActiveTab] = useState<'add' | 'manage' | 'settings' | 'backup'>('add');
+  const [activeTab, setActiveTab] = useState<'add' | 'manage' | 'categories' | 'settings' | 'backup'>('add');
 
   // Add / Edit Product Form State
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
-  const [category, setCategory] = useState<Category>('Swarovski Jewellery');
+  const [category, setCategory] = useState<string>(categories[1] || '👗 Designer & Branded Clothing');
   const [price, setPrice] = useState<string>('');
   const [originalPrice, setOriginalPrice] = useState<string>('');
   const [description, setDescription] = useState('');
@@ -67,6 +62,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [images, setImages] = useState<string[]>([]);
   const [imageUrlInput, setImageUrlInput] = useState('');
 
+  // Category Manager State
+  const [newCategoryName, setNewCategoryName] = useState('');
+
   // Settings State
   const [tempSettings, setTempSettings] = useState<StoreSettings>(settings);
   const [settingsSaved, setSettingsSaved] = useState(false);
@@ -74,10 +72,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const backupInputRef = useRef<HTMLInputElement>(null);
 
-  // PIN Verification
+  // PIN Verification (Supports updated PIN 'aashi12345')
   const handlePinSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (enteredPin === settings.adminPin || enteredPin === 'alora123') {
+    if (enteredPin === settings.adminPin || enteredPin === 'aashi12345') {
       setIsAuthenticated(true);
       setPinError(false);
     } else {
@@ -85,7 +83,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     }
   };
 
-  // Image Upload Handler (Converts device file to Base64 data URL)
+  // Image Upload Handler
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -124,7 +122,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     const finalImages = images.length > 0 ? images : [defaultFallbackImage];
 
     if (editingId) {
-      // Update existing product
       const updated: Product = {
         id: editingId,
         name: name.trim(),
@@ -141,7 +138,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       onUpdateProduct(updated);
       alert('Product updated successfully!');
     } else {
-      // Create new product
       const newProduct: Product = {
         id: `alr-${Date.now()}`,
         name: name.trim(),
@@ -158,10 +154,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       };
       onAddProduct(newProduct);
       confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
-      alert('✨ Product added to live website!');
+      alert('✨ Product published to live website!');
     }
 
-    // Reset Form
     resetForm();
     setActiveTab('manage');
   };
@@ -169,7 +164,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const resetForm = () => {
     setEditingId(null);
     setName('');
-    setCategory('Swarovski Jewellery');
+    setCategory(categories[1] || '👗 Designer & Branded Clothing');
     setPrice('');
     setOriginalPrice('');
     setDescription('');
@@ -192,6 +187,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setInStock(p.inStock);
     setImages(p.images);
     setActiveTab('add');
+  };
+
+  // Add Category Handler
+  const handleAddNewCategory = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCategoryName.trim()) return;
+    onAddCategory(newCategoryName.trim());
+    setNewCategoryName('');
+    alert('✓ Category added successfully to website!');
   };
 
   // Save Settings
@@ -226,7 +230,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           onImportCatalog(parsed);
           alert('Catalog successfully restored from backup!');
         } else {
-          alert('Invalid file format. Please upload a valid Alora backup JSON.');
+          alert('Invalid file format.');
         }
       } catch (err) {
         alert('Error reading backup file.');
@@ -234,6 +238,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     };
     reader.readAsText(file);
   };
+
+  const availableCategoriesForForm = categories.filter((c) => c !== 'All');
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-fadeIn">
@@ -244,12 +250,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         {/* Top Header */}
         <div className="bg-[#141416] text-[#FAF7F2] px-6 py-4 flex items-center justify-between border-b border-[#2A2A2A]">
           <div className="flex items-center space-x-2">
-            <Sparkles className="w-4 h-4 text-[#D4AF37]" />
+            <span className="text-xl">👑</span>
             <h3 className="font-serif text-lg font-bold tracking-wide">
               Ayushi's Boutique Management Portal
             </h3>
-            <span className="text-[10px] bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40 px-2 py-0.5 rounded-full font-mono uppercase">
-              No Coding Needed
+            <span className="text-[10px] bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40 px-2.5 py-0.5 rounded-full font-mono uppercase">
+              PIN: aashi12345
             </span>
           </div>
 
@@ -265,8 +271,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         {/* Gate 1: PIN Authentication */}
         {!isAuthenticated ? (
           <div className="p-8 sm:p-12 text-center max-w-sm mx-auto space-y-6 my-auto">
-            <div className="w-16 h-16 rounded-full bg-[#FAF7F2] border-2 border-[#D4AF37] flex items-center justify-center mx-auto shadow-md">
-              <Lock className="w-7 h-7 text-[#D4AF37]" />
+            <div className="w-16 h-16 rounded-full bg-[#FAF7F2] border-2 border-[#D4AF37] flex items-center justify-center mx-auto shadow-md text-2xl">
+              👑
             </div>
 
             <div className="space-y-1">
@@ -274,7 +280,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 Owner Security Gate
               </h4>
               <p className="text-xs text-gray-500">
-                Please enter your private owner PIN to manage products & orders. (Default: <strong className="text-black">alora123</strong>)
+                Please enter your private owner PIN to manage products & categories.
               </p>
             </div>
 
@@ -282,7 +288,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               <div>
                 <input
                   type="password"
-                  placeholder="Enter PIN..."
+                  placeholder="Enter PIN (aashi12345)..."
                   value={enteredPin}
                   onChange={(e) => setEnteredPin(e.target.value)}
                   className="w-full text-center tracking-widest text-lg font-mono py-2.5 px-4 bg-white border border-[#D5C7B3] rounded-xl focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]"
@@ -290,7 +296,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 />
                 {pinError && (
                   <p className="text-xs text-rose-500 mt-1.5 font-medium">
-                    Incorrect PIN. Try default: alora123
+                    Incorrect PIN. Try: aashi12345
                   </p>
                 )}
               </div>
@@ -299,7 +305,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 type="submit"
                 className="w-full py-3 bg-[#141416] text-[#FAF7F2] text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#D4AF37] hover:text-[#141416] transition-all shadow-md"
               >
-                Unlock Dashboard
+                Unlock Dashboard 👑
               </button>
             </form>
           </div>
@@ -309,25 +315,25 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           <div className="flex-1 flex flex-col overflow-hidden">
             
             {/* Dashboard Tabs */}
-            <div className="bg-[#FAF7F2] border-b border-[#EADFCF] px-6 py-2 flex space-x-2 sm:space-x-4 overflow-x-auto text-xs font-semibold">
+            <div className="bg-[#FAF7F2] border-b border-[#EADFCF] px-4 sm:px-6 py-2 flex space-x-2 sm:space-x-3 overflow-x-auto text-xs font-semibold">
               <button
                 onClick={() => {
                   resetForm();
                   setActiveTab('add');
                 }}
-                className={`py-2 px-3.5 rounded-xl transition-all flex items-center space-x-1.5 ${
+                className={`py-2 px-3 rounded-xl transition-all flex items-center space-x-1.5 whitespace-nowrap ${
                   activeTab === 'add'
                     ? 'bg-[#141416] text-[#FAF7F2] shadow-sm'
                     : 'text-gray-600 hover:text-black hover:bg-white/60'
                 }`}
               >
                 <Plus className="w-3.5 h-3.5" />
-                <span>{editingId ? 'Edit Product' : 'Add New Item'}</span>
+                <span>{editingId ? 'Edit Product' : 'Add Item'}</span>
               </button>
 
               <button
                 onClick={() => setActiveTab('manage')}
-                className={`py-2 px-3.5 rounded-xl transition-all flex items-center space-x-1.5 ${
+                className={`py-2 px-3 rounded-xl transition-all flex items-center space-x-1.5 whitespace-nowrap ${
                   activeTab === 'manage'
                     ? 'bg-[#141416] text-[#FAF7F2] shadow-sm'
                     : 'text-gray-600 hover:text-black hover:bg-white/60'
@@ -337,8 +343,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               </button>
 
               <button
+                onClick={() => setActiveTab('categories')}
+                className={`py-2 px-3 rounded-xl transition-all flex items-center space-x-1.5 whitespace-nowrap ${
+                  activeTab === 'categories'
+                    ? 'bg-[#141416] text-[#FAF7F2] shadow-sm'
+                    : 'text-gray-600 hover:text-black hover:bg-white/60'
+                }`}
+              >
+                <Grid className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>Category Manager ({categories.length - 1})</span>
+              </button>
+
+              <button
                 onClick={() => setActiveTab('settings')}
-                className={`py-2 px-3.5 rounded-xl transition-all flex items-center space-x-1.5 ${
+                className={`py-2 px-3 rounded-xl transition-all flex items-center space-x-1.5 whitespace-nowrap ${
                   activeTab === 'settings'
                     ? 'bg-[#141416] text-[#FAF7F2] shadow-sm'
                     : 'text-gray-600 hover:text-black hover:bg-white/60'
@@ -350,23 +368,23 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
               <button
                 onClick={() => setActiveTab('backup')}
-                className={`py-2 px-3.5 rounded-xl transition-all flex items-center space-x-1.5 ${
+                className={`py-2 px-3 rounded-xl transition-all flex items-center space-x-1.5 whitespace-nowrap ${
                   activeTab === 'backup'
                     ? 'bg-[#141416] text-[#FAF7F2] shadow-sm'
                     : 'text-gray-600 hover:text-black hover:bg-white/60'
                 }`}
               >
                 <Download className="w-3.5 h-3.5" />
-                <span>Backup & Reset</span>
+                <span>Backup</span>
               </button>
             </div>
 
             {/* Tab Body */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
               
               {/* TAB 1: ADD OR EDIT PRODUCT */}
               {activeTab === 'add' && (
-                <form onSubmit={handleProductSubmit} className="space-y-5 max-w-2xl mx-auto">
+                <form onSubmit={handleProductSubmit} className="space-y-4 max-w-2xl mx-auto">
                   <div className="flex justify-between items-center border-b border-[#EADFCF] pb-2">
                     <h4 className="font-serif text-lg font-bold text-[#141416]">
                       {editingId ? '✏️ Edit Product Details' : '✨ Add New Piece to Store'}
@@ -388,7 +406,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       <label className="block font-bold text-gray-700 mb-1">Product Title *</label>
                       <input
                         type="text"
-                        placeholder="e.g. Swarovski Crystal Butterfly Choker"
+                        placeholder="e.g. Mulberry Silk Gown / Swarovski Tennis Bracelet"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="w-full bg-white border border-[#D5C7B3] rounded-xl px-3.5 py-2 text-[#141416] focus:outline-none focus:border-[#D4AF37]"
@@ -397,13 +415,22 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     </div>
 
                     <div>
-                      <label className="block font-bold text-gray-700 mb-1">Category *</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="font-bold text-gray-700">Category *</label>
+                        <button
+                          type="button"
+                          onClick={() => setActiveTab('categories')}
+                          className="text-[10px] text-[#B8860B] hover:underline"
+                        >
+                          + Add/Remove Categories
+                        </button>
+                      </div>
                       <select
                         value={category}
-                        onChange={(e) => setCategory(e.target.value as Category)}
+                        onChange={(e) => setCategory(e.target.value)}
                         className="w-full bg-white border border-[#D5C7B3] rounded-xl px-3.5 py-2 text-[#141416] focus:outline-none focus:border-[#D4AF37]"
                       >
-                        {CATEGORIES.map((cat) => (
+                        {availableCategoriesForForm.map((cat) => (
                           <option key={cat} value={cat}>{cat}</option>
                         ))}
                       </select>
@@ -454,7 +481,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   <div className="space-y-2 text-xs">
                     <label className="block font-bold text-gray-700">Product Photos</label>
                     
-                    {/* Device Upload Button */}
                     <div className="flex gap-2">
                       <input
                         type="file"
@@ -473,11 +499,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         <span>Upload from Phone / PC</span>
                       </button>
 
-                      {/* Or image URL input */}
                       <div className="flex-1 flex gap-2">
                         <input
                           type="url"
-                          placeholder="Or paste image link (Unsplash/Imgur)..."
+                          placeholder="Or paste image link..."
                           value={imageUrlInput}
                           onChange={(e) => setImageUrlInput(e.target.value)}
                           className="flex-1 bg-white border border-[#D5C7B3] rounded-xl px-3.5 py-2 focus:outline-none focus:border-[#D4AF37]"
@@ -485,14 +510,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         <button
                           type="button"
                           onClick={handleAddImageUrl}
-                          className="px-3.5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl"
+                          className="px-3.5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold"
                         >
                           Add URL
                         </button>
                       </div>
                     </div>
 
-                    {/* Previews */}
                     {images.length > 0 && (
                       <div className="flex gap-3 overflow-x-auto py-2">
                         {images.map((img, idx) => (
@@ -518,7 +542,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       <label className="block font-bold text-gray-700 mb-1">Description</label>
                       <textarea
                         rows={3}
-                        placeholder="Describe the craftsmanship, style notes, and pairing tips..."
+                        placeholder="Describe the fabric, sizing, craftsmanship, and styling notes..."
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         className="w-full bg-white border border-[#D5C7B3] rounded-xl px-3.5 py-2 text-[#141416] focus:outline-none focus:border-[#D4AF37]"
@@ -526,10 +550,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     </div>
 
                     <div>
-                      <label className="block font-bold text-gray-700 mb-1">Materials & Polish (Optional)</label>
+                      <label className="block font-bold text-gray-700 mb-1">Materials / Polish (Optional)</label>
                       <input
                         type="text"
-                        placeholder="e.g. Certified Swarovski Crystals, Anti-tarnish 18k Rose Gold Plating"
+                        placeholder="e.g. Mulberry Satin Silk / 18k Gold Polish / Austrian Crystals"
                         value={material}
                         onChange={(e) => setMaterial(e.target.value)}
                         className="w-full bg-white border border-[#D5C7B3] rounded-xl px-3.5 py-2 text-[#141416] focus:outline-none focus:border-[#D4AF37]"
@@ -583,9 +607,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
                   <div className="grid grid-cols-1 divide-y divide-[#EADFCF] bg-white rounded-2xl border border-[#EADFCF] overflow-hidden">
                     {products.map((p) => (
-                      <div key={p.id} className="p-4 flex items-center justify-between gap-4 hover:bg-[#FAF7F2] transition-colors">
+                      <div key={p.id} className="p-3 sm:p-4 flex items-center justify-between gap-3 sm:gap-4 hover:bg-[#FAF7F2] transition-colors">
                         
-                        {/* Thumbnail & Info */}
                         <div className="flex items-center space-x-3 flex-1 min-w-0">
                           <img
                             src={p.images[0] || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1000'}
@@ -593,11 +616,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                             className="w-12 h-12 rounded-xl object-cover border border-[#EADFCF] flex-shrink-0"
                           />
                           <div className="min-w-0">
-                            <h5 className="font-serif text-sm font-bold text-[#141416] truncate">
+                            <h5 className="font-serif text-xs sm:text-sm font-bold text-[#141416] truncate">
                               {p.name}
                             </h5>
-                            <div className="flex items-center space-x-2 text-xs text-gray-500">
-                              <span>{p.category}</span>
+                            <div className="flex items-center space-x-2 text-[11px] text-gray-500">
+                              <span className="truncate">{p.category}</span>
                               <span>•</span>
                               <span className="font-bold text-[#141416]">
                                 {settings.currencySymbol}{p.price.toLocaleString('en-IN')}
@@ -606,11 +629,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           </div>
                         </div>
 
-                        {/* Status Toggle & Actions */}
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-1.5 sm:space-x-2">
                           <button
                             onClick={() => onUpdateProduct({ ...p, inStock: !p.inStock })}
-                            className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-colors ${
+                            className={`px-2 py-1 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider transition-colors ${
                               p.inStock
                                 ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
                                 : 'bg-rose-100 text-rose-800 hover:bg-rose-200'
@@ -621,7 +643,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
                           <button
                             onClick={() => handleEditClick(p)}
-                            className="p-2 text-gray-500 hover:text-[#D4AF37] hover:bg-black/5 rounded-lg transition-colors"
+                            className="p-1.5 sm:p-2 text-gray-500 hover:text-[#D4AF37] hover:bg-black/5 rounded-lg transition-colors"
                             title="Edit Product"
                           >
                             <Edit3 className="w-4 h-4" />
@@ -633,7 +655,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                 onDeleteProduct(p.id);
                               }
                             }}
-                            className="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                            className="p-1.5 sm:p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                             title="Delete Product"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -646,7 +668,88 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 </div>
               )}
 
-              {/* TAB 3: STORE SETTINGS */}
+              {/* TAB 3: DYNAMIC CATEGORY MANAGER (NEW FEATURE!) */}
+              {activeTab === 'categories' && (
+                <div className="space-y-6 max-w-xl mx-auto text-xs">
+                  <div className="border-b border-[#EADFCF] pb-2">
+                    <h4 className="font-serif text-lg font-bold text-[#141416] flex items-center space-x-2">
+                      <Grid className="w-5 h-5 text-[#D4AF37]" />
+                      <span>Boutique Category Manager</span>
+                    </h4>
+                    <p className="text-gray-500">
+                      Add, rename or remove categories. Changes immediately reflect across the whole website!
+                    </p>
+                  </div>
+
+                  {/* Add Category Form */}
+                  <form onSubmit={handleAddNewCategory} className="bg-white p-4 rounded-2xl border border-[#EADFCF] space-y-3">
+                    <label className="block font-bold text-gray-700">Add New Category</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="e.g. 👠 Branded Footwear / 🌸 Luxury Perfumes"
+                        value={newCategoryName}
+                        onChange={(e) => setNewCategoryName(e.target.value)}
+                        className="flex-1 bg-[#FAF7F2] border border-[#D5C7B3] rounded-xl px-3.5 py-2 text-[#141416] focus:outline-none focus:border-[#D4AF37]"
+                        required
+                      />
+                      <button
+                        type="submit"
+                        className="px-4 py-2 bg-[#141416] hover:bg-[#D4AF37] text-white hover:text-black font-bold rounded-xl transition-all flex items-center space-x-1"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>Add Category</span>
+                      </button>
+                    </div>
+
+                    {/* Quick Preset Buttons */}
+                    <div className="pt-2">
+                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1.5">Quick Presets:</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {['👠 Branded Footwear', '🌸 Luxury Perfumes & Mists', '🕶️ Designer Sunglasses', '👑 Party Wear Tops', '💄 Beauty & Glamour'].map((preset) => (
+                          <button
+                            type="button"
+                            key={preset}
+                            onClick={() => {
+                              onAddCategory(preset);
+                              alert(`✓ Added ${preset}`);
+                            }}
+                            className="px-2.5 py-1 bg-[#FAF7F2] border border-[#EADFCF] hover:border-[#D4AF37] rounded-lg text-[11px] text-gray-700"
+                          >
+                            + {preset}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </form>
+
+                  {/* Existing Categories List */}
+                  <div className="space-y-2">
+                    <label className="block font-bold text-gray-700">Current Active Categories ({categories.length - 1})</label>
+                    <div className="bg-white rounded-2xl border border-[#EADFCF] divide-y divide-[#EADFCF] overflow-hidden">
+                      {categories.filter(c => c !== 'All').map((cat) => (
+                        <div key={cat} className="p-3 flex items-center justify-between hover:bg-[#FAF7F2] transition-colors">
+                          <span className="font-semibold text-gray-800">{cat}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (confirm(`Are you sure you want to delete category "${cat}"? Products in this category won't be deleted.`)) {
+                                onDeleteCategory(cat);
+                              }
+                            }}
+                            className="p-1.5 text-gray-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors"
+                            title="Delete Category"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 4: STORE SETTINGS */}
               {activeTab === 'settings' && (
                 <form onSubmit={handleSaveSettings} className="space-y-4 max-w-lg mx-auto text-xs">
                   <div className="border-b border-[#EADFCF] pb-2">
@@ -663,7 +766,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <div className="relative">
                       <input
                         type="text"
-                        placeholder="e.g. 919876543210"
+                        placeholder="e.g. 919667779443"
                         value={tempSettings.whatsappNumber}
                         onChange={(e) => setTempSettings({ ...tempSettings, whatsappNumber: e.target.value.replace(/\D/g, '') })}
                         className="w-full bg-white border border-[#D5C7B3] rounded-xl pl-9 pr-3.5 py-2 text-[#141416] font-mono focus:outline-none focus:border-[#D4AF37]"
@@ -671,7 +774,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       <MessageCircle className="w-4 h-4 text-[#25D366] absolute left-3 top-2.5" />
                     </div>
                     <span className="text-[10px] text-gray-400 mt-1 block">
-                      Include country code (e.g. 91 for India followed by 10-digit number).
+                      Include country code (e.g. 91 for India followed by 10-digit number 9667779443).
                     </span>
                   </div>
 
@@ -692,7 +795,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <label className="block font-bold text-gray-700 mb-1">Top Announcement Banner Text</label>
                     <input
                       type="text"
-                      placeholder="e.g. ✨ FREE Luxury Gift Box with all Swarovski orders ✨"
+                      placeholder="e.g. 👑 100% Authenticated Branded Pieces • WhatsApp: +91 9667779443 👑"
                       value={tempSettings.announcementText}
                       onChange={(e) => setTempSettings({ ...tempSettings, announcementText: e.target.value })}
                       className="w-full bg-white border border-[#D5C7B3] rounded-xl px-3.5 py-2 text-[#141416] focus:outline-none focus:border-[#D4AF37]"
@@ -707,6 +810,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       onChange={(e) => setTempSettings({ ...tempSettings, adminPin: e.target.value })}
                       className="w-full bg-white border border-[#D5C7B3] rounded-xl px-3.5 py-2 text-[#141416] font-mono focus:outline-none focus:border-[#D4AF37]"
                     />
+                    <span className="text-[10px] text-gray-400 mt-1 block">Current PIN is: aashi12345</span>
                   </div>
 
                   <div className="pt-2">
@@ -725,7 +829,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 </form>
               )}
 
-              {/* TAB 4: BACKUP & CATALOG RESET */}
+              {/* TAB 5: BACKUP & CATALOG RESET */}
               {activeTab === 'backup' && (
                 <div className="space-y-6 max-w-lg mx-auto text-xs">
                   <div className="border-b border-[#EADFCF] pb-2">
@@ -784,7 +888,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       <span>Reset to Sample Products</span>
                     </h5>
                     <p className="text-rose-600">
-                      If you ever want to reset back to the curated Swarovski and clothing demo items.
+                      If you ever want to reset back to the curated branded collection.
                     </p>
                     <button
                       onClick={() => {

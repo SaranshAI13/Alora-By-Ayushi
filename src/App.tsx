@@ -7,15 +7,26 @@ import { AdminPanel } from './components/AdminPanel';
 import { InstagramSection } from './components/InstagramSection';
 import { Features } from './components/Features';
 import { Footer } from './components/Footer';
-import { Product, StoreSettings, Category } from './types';
-import { INITIAL_PRODUCTS, DEFAULT_STORE_SETTINGS } from './data/initialProducts';
+import { Product, StoreSettings } from './types';
+import { INITIAL_PRODUCTS, DEFAULT_STORE_SETTINGS, DEFAULT_CATEGORIES } from './data/initialProducts';
 import { Sparkles, SlidersHorizontal, Heart, X, MessageCircle, Phone, Grid, ShoppingBag } from 'lucide-react';
 
 export default function App() {
+  // Categories State (Dynamic with LocalStorage persistence)
+  const [categories, setCategories] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('alora_categories_v2');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error('Error loading categories', e);
+    }
+    return DEFAULT_CATEGORIES;
+  });
+
   // Products State (Loaded from localStorage or initial)
   const [products, setProducts] = useState<Product[]>(() => {
     try {
-      const saved = localStorage.getItem('alora_products_v2');
+      const saved = localStorage.getItem('alora_products_v3');
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error('Error loading products from local storage', e);
@@ -23,11 +34,14 @@ export default function App() {
     return INITIAL_PRODUCTS;
   });
 
-  // Settings State (Loaded from localStorage or initial)
+  // Settings State (Loaded from localStorage or initial with updated PIN 'aashi12345')
   const [settings, setSettings] = useState<StoreSettings>(() => {
     try {
-      const saved = localStorage.getItem('alora_settings_v2');
-      if (saved) return JSON.parse(saved);
+      const saved = localStorage.getItem('alora_settings_v3');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return { ...DEFAULT_STORE_SETTINGS, ...parsed, adminPin: parsed.adminPin || 'aashi12345' };
+      }
     } catch (e) {
       console.error('Error loading settings from local storage', e);
     }
@@ -37,7 +51,7 @@ export default function App() {
   // Wishlist State
   const [wishlist, setWishlist] = useState<string[]>(() => {
     try {
-      const saved = localStorage.getItem('alora_wishlist_v2');
+      const saved = localStorage.getItem('alora_wishlist_v3');
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error('Error loading wishlist', e);
@@ -55,28 +69,37 @@ export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isWishlistDrawerOpen, setIsWishlistDrawerOpen] = useState(false);
 
-  // Sync products to localStorage
+  // Sync categories
   useEffect(() => {
     try {
-      localStorage.setItem('alora_products_v2', JSON.stringify(products));
+      localStorage.setItem('alora_categories_v2', JSON.stringify(categories));
     } catch (e) {
-      console.error('Failed to save products to localStorage', e);
+      console.error('Failed to save categories', e);
+    }
+  }, [categories]);
+
+  // Sync products
+  useEffect(() => {
+    try {
+      localStorage.setItem('alora_products_v3', JSON.stringify(products));
+    } catch (e) {
+      console.error('Failed to save products', e);
     }
   }, [products]);
 
   // Sync settings
   useEffect(() => {
     try {
-      localStorage.setItem('alora_settings_v2', JSON.stringify(settings));
+      localStorage.setItem('alora_settings_v3', JSON.stringify(settings));
     } catch (e) {
-      console.error('Failed to save settings to localStorage', e);
+      console.error('Failed to save settings', e);
     }
   }, [settings]);
 
   // Sync wishlist
   useEffect(() => {
     try {
-      localStorage.setItem('alora_wishlist_v2', JSON.stringify(wishlist));
+      localStorage.setItem('alora_wishlist_v3', JSON.stringify(wishlist));
     } catch (e) {
       console.error('Failed to save wishlist', e);
     }
@@ -87,6 +110,21 @@ export default function App() {
     setWishlist((prev) => 
       prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId]
     );
+  };
+
+  // Category Management Handlers
+  const handleAddCategory = (newCat: string) => {
+    if (!categories.includes(newCat)) {
+      setCategories((prev) => [...prev, newCat]);
+    }
+  };
+
+  const handleDeleteCategory = (catToDelete: string) => {
+    if (catToDelete === 'All') return;
+    setCategories((prev) => prev.filter((c) => c !== catToDelete));
+    if (selectedCategory === catToDelete) {
+      setSelectedCategory('All');
+    }
   };
 
   // Product CRUD
@@ -107,6 +145,7 @@ export default function App() {
 
   const handleResetCatalog = () => {
     setProducts(INITIAL_PRODUCTS);
+    setCategories(DEFAULT_CATEGORIES);
   };
 
   const handleImportCatalog = (imported: Product[]) => {
@@ -130,19 +169,12 @@ export default function App() {
     return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
   });
 
-  const categoriesData = [
-    { name: 'All', emoji: '✨', label: 'All Items' },
-    { name: 'Designer Clothing', emoji: '👗', label: 'Dresses & Wear' },
-    { name: 'Swarovski Jewellery', emoji: '💎', label: 'Swarovski' },
-    { name: 'Necklaces & Chokers', emoji: '📿', label: 'Necklaces' },
-    { name: 'Earrings & Jhumkas', emoji: '✨', label: 'Earrings' },
-    { name: 'Bracelets & Bangles', emoji: '💫', label: 'Bracelets' },
-    { name: 'Rings', emoji: '💍', label: 'Rings' },
-    { name: 'Bags & Accessories', emoji: '👜', label: 'Handbags' },
-    { name: 'Gifting & Combos', emoji: '🎁', label: 'Combos' }
-  ];
-
   const wishlistedProducts = products.filter((p) => wishlist.includes(p.id));
+
+  // Quick WhatsApp message URL
+  const whatsappConsultUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
+    "Hi Ayushi! 👑 I'm visiting Alora online and would love to place a custom order or inquire about your collection."
+  )}`;
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] text-[#141416] flex flex-col font-sans pb-16 sm:pb-0">
@@ -171,34 +203,33 @@ export default function App() {
         }}
       />
 
-      {/* VISUAL CATEGORY SHOWCASE BAR (MOBILE & DESKTOP) */}
-      <section className="bg-white border-b border-[#EADFCF] py-5 px-4 sm:px-8 shadow-sm">
+      {/* VISUAL CATEGORY SHOWCASE BAR (DYNAMIC WITH AYUSHI'S CATEGORIES) */}
+      <section className="bg-white border-b border-[#EADFCF] py-4 px-4 sm:px-8 shadow-sm">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-2.5">
             <span className="text-[11px] font-bold uppercase tracking-widest text-[#B8860B] flex items-center space-x-1.5">
               <Grid className="w-3.5 h-3.5" />
-              <span>Shop By Category</span>
+              <span>Explore Royal Collections 👑</span>
             </span>
-            <span className="text-xs text-gray-400">Swipe horizontally ➔</span>
+            <span className="text-xs text-gray-400 hidden sm:inline">Swipe horizontally ➔</span>
           </div>
 
-          <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none">
-            {categoriesData.map((cat) => (
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+            {categories.map((cat) => (
               <button
-                key={cat.name}
+                key={cat}
                 onClick={() => {
-                  setSelectedCategory(cat.name);
+                  setSelectedCategory(cat);
                   const el = document.getElementById('catalog-section');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className={`flex items-center space-x-2 px-3.5 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all shadow-sm ${
-                  selectedCategory === cat.name
+                className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all shadow-sm ${
+                  selectedCategory === cat
                     ? 'bg-[#141416] text-[#FAF7F2] ring-2 ring-[#D4AF37]/50'
                     : 'bg-[#FAF7F2] border border-[#EADFCF] text-gray-700 hover:border-[#D4AF37] hover:bg-white'
                 }`}
               >
-                <span className="text-sm">{cat.emoji}</span>
-                <span>{cat.label}</span>
+                <span>{cat}</span>
               </button>
             ))}
           </div>
@@ -212,10 +243,10 @@ export default function App() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 border-b border-[#EADFCF] pb-4">
           <div className="space-y-1">
             <h2 className="font-serif text-2xl sm:text-4xl font-bold text-[#141416]">
-              {selectedCategory === 'All' ? 'All Curated Pieces' : selectedCategory}
+              {selectedCategory === 'All' ? 'Curated Branded & Jewellery Collection' : selectedCategory}
             </h2>
             <p className="text-xs text-gray-500">
-              Showing {sortedProducts.length} items • Instant Order via WhatsApp (+91 9667779443)
+              Showing {sortedProducts.length} royal pieces • Direct WhatsApp Orders: +91 9667779443
             </p>
           </div>
 
@@ -258,7 +289,7 @@ export default function App() {
             </div>
             <h3 className="font-serif text-xl font-bold text-[#141416]">No items found</h3>
             <p className="text-xs text-gray-500 max-w-sm mx-auto">
-              We couldn't find any products matching your search. Tap below to reset.
+              We couldn't find any products in this category. You can add items in the Admin Portal!
             </p>
             <button
               onClick={() => {
@@ -274,7 +305,7 @@ export default function App() {
 
       </section>
 
-      {/* Brand Values / Features */}
+      {/* Brand Values / Features (100% Authenticated Branded, Money Back Guaranteed, etc.) */}
       <Features />
 
       {/* Instagram Community Section */}
@@ -300,24 +331,27 @@ export default function App() {
         onToggleWishlist={toggleWishlist}
       />
 
-      {/* Ayushi's Admin Panel Modal */}
+      {/* Ayushi's Admin Panel Modal with Dynamic Category Manager */}
       <AdminPanel
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
         products={products}
         settings={settings}
+        categories={categories}
         onAddProduct={handleAddProduct}
         onUpdateProduct={handleUpdateProduct}
         onDeleteProduct={handleDeleteProduct}
         onUpdateSettings={(newSettings) => setSettings(newSettings)}
         onResetCatalog={handleResetCatalog}
         onImportCatalog={handleImportCatalog}
+        onAddCategory={handleAddCategory}
+        onDeleteCategory={handleDeleteCategory}
       />
 
       {/* STICKY BOTTOM MOBILE QUICK CONTACT BAR */}
       <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#EADFCF] px-4 py-2.5 shadow-2xl flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Custom Orders & Inquiries</p>
+          <p className="text-[10px] uppercase font-bold text-[#B8860B] tracking-wider">Ayushi's Direct Helpline</p>
           <a href="tel:+919667779443" className="text-xs font-bold text-[#141416] font-mono flex items-center space-x-1">
             <Phone className="w-3 h-3 text-[#B8860B]" />
             <span>+91 9667779443</span>
@@ -325,10 +359,10 @@ export default function App() {
         </div>
 
         <a
-          href={`https://wa.me/${settings.whatsappNumber}?text=Hi%20Ayushi!%20I'm%20browsing%20Alora%20and%20would%20love%20to%20place%20an%20order.`}
+          href={whatsappConsultUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-4 py-2 bg-[#25D366] text-white rounded-xl text-xs font-bold flex items-center space-x-1.5 shadow-md flex-shrink-0"
+          className="px-4 py-2 bg-[#25D366] text-white rounded-xl text-xs font-bold flex items-center space-x-1.5 shadow-md flex-shrink-0 hover:brightness-105"
         >
           <MessageCircle className="w-3.5 h-3.5" />
           <span>Chat on WhatsApp</span>
@@ -340,9 +374,8 @@ export default function App() {
         <div className="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-sm flex justify-end animate-fadeIn">
           <div className="bg-[#FFFDF9] w-full max-w-md h-full shadow-2xl p-6 flex flex-col justify-between border-l border-[#EADFCF]">
             
-            {/* Header */}
-            <div>
-              <div className="flex items-center justify-between border-b border-[#EADFCF] pb-4 mb-4">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between border-b border-[#EADFCF] pb-4">
                 <div className="flex items-center space-x-2">
                   <Heart className="w-5 h-5 text-rose-500 fill-current" />
                   <h3 className="font-serif text-lg font-bold text-[#141416]">
@@ -357,7 +390,6 @@ export default function App() {
                 </button>
               </div>
 
-              {/* Items List */}
               <div className="space-y-3 overflow-y-auto max-h-[65vh] pr-1">
                 {wishlistedProducts.length > 0 ? (
                   wishlistedProducts.map((item) => (
@@ -377,7 +409,9 @@ export default function App() {
                       </div>
                       <div className="flex items-center space-x-1">
                         <a
-                          href={`https://wa.me/${settings.whatsappNumber}?text=Hi%20Ayushi!%20I%20wishlisted%20*${encodeURIComponent(item.name)}*%20(${settings.currencySymbol}${item.price}).%20Can%20I%20order?`}
+                          href={`https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
+                            `Hi Ayushi! 👑 I wishlisted *${item.name}* (${settings.currencySymbol}${item.price}). Can I order this piece?`
+                          )}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-2 bg-[#25D366] text-white rounded-lg shadow-sm hover:brightness-110"
@@ -403,11 +437,12 @@ export default function App() {
               </div>
             </div>
 
-            {/* Bottom Actions */}
             {wishlistedProducts.length > 0 && (
               <div className="pt-4 border-t border-[#EADFCF]">
                 <a
-                  href={`https://wa.me/${settings.whatsappNumber}?text=Hi%20Ayushi!%20Here%20are%20the%20items%20in%20my%20Alora%20wishlist:%20${encodeURIComponent(wishlistedProducts.map(p => p.name).join(', '))}`}
+                  href={`https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
+                    `Hi Ayushi! 👑 Here are the items in my Alora wishlist: ${wishlistedProducts.map(p => p.name).join(', ')}`
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full py-3 bg-[#141416] text-[#FAF7F2] text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#25D366] hover:text-white transition-all shadow-md flex items-center justify-center space-x-2"
