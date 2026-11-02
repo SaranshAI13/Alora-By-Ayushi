@@ -9,7 +9,7 @@ import { Features } from './components/Features';
 import { Footer } from './components/Footer';
 import { Product, StoreSettings } from './types';
 import { INITIAL_PRODUCTS, DEFAULT_STORE_SETTINGS, DEFAULT_CATEGORIES } from './data/initialProducts';
-import { Sparkles, SlidersHorizontal, Heart, X, MessageCircle, Phone, Grid, ShoppingBag } from 'lucide-react';
+import { Sparkles, SlidersHorizontal, Heart, X, MessageCircle, Phone, Grid, ShoppingBag, Lock } from 'lucide-react';
 
 export default function App() {
   // Categories State (Dynamic with LocalStorage persistence)
@@ -177,7 +177,7 @@ export default function App() {
   )}`;
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#141416] flex flex-col font-sans pb-16 sm:pb-0">
+    <div className="min-h-screen bg-[#FAF7F2] text-[#141416] flex flex-col font-sans pb-20 sm:pb-0">
       
       {/* Navigation with Unified Category Bar */}
       <Navbar
@@ -318,25 +318,62 @@ export default function App() {
         onDeleteCategory={handleDeleteCategory}
       />
 
-      {/* STICKY BOTTOM MOBILE QUICK CONTACT BAR */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#EADFCF] px-4 py-2.5 shadow-2xl flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-[10px] uppercase font-bold text-[#B8860B] tracking-wider">Ayushi's Direct Helpline</p>
-          <a href="tel:+919667779443" className="text-xs font-bold text-[#141416] font-mono flex items-center space-x-1">
-            <Phone className="w-3 h-3 text-[#B8860B]" />
-            <span>+91 9667779443</span>
-          </a>
-        </div>
+      {/* MOBILE LUXURY APP-STYLE BOTTOM DOCK (OPTIMIZED FOR PHONE SHOPPERS) */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-[#EADFCF] px-4 py-2 shadow-2xl flex items-center justify-around">
+        {/* Shop Button */}
+        <button
+          onClick={() => {
+            const el = document.getElementById('catalog-section');
+            el?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="flex flex-col items-center justify-center text-gray-700 hover:text-[#B8860B] active:scale-95 transition-all"
+        >
+          <Grid className="w-5 h-5 text-[#B8860B]" />
+          <span className="text-[10px] font-semibold mt-0.5">Shop</span>
+        </button>
 
+        {/* Wishlist Button */}
+        <button
+          onClick={() => setIsWishlistDrawerOpen(true)}
+          className="flex flex-col items-center justify-center text-gray-700 hover:text-rose-500 relative active:scale-95 transition-all"
+        >
+          <Heart className="w-5 h-5 text-rose-500" />
+          {wishlist.length > 0 && (
+            <span className="absolute -top-1 right-1 bg-rose-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-bounce">
+              {wishlist.length}
+            </span>
+          )}
+          <span className="text-[10px] font-semibold mt-0.5">Wishlist</span>
+        </button>
+
+        {/* Center WhatsApp Order Button (Prominent Floating Green Pill) */}
         <a
           href={whatsappConsultUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-4 py-2 bg-[#25D366] text-white rounded-xl text-xs font-bold flex items-center space-x-1.5 shadow-md flex-shrink-0 hover:brightness-105"
+          className="flex items-center space-x-1 px-4 py-2 bg-[#25D366] text-white rounded-full shadow-lg active:scale-95 transition-all text-xs font-bold -mt-3 ring-4 ring-white"
         >
-          <MessageCircle className="w-3.5 h-3.5" />
-          <span>Chat on WhatsApp</span>
+          <MessageCircle className="w-4 h-4" />
+          <span>Order</span>
         </a>
+
+        {/* Direct Call to Ayushi */}
+        <a
+          href="tel:+919667779443"
+          className="flex flex-col items-center justify-center text-gray-700 hover:text-[#141416] active:scale-95 transition-all"
+        >
+          <Phone className="w-5 h-5 text-[#B8860B]" />
+          <span className="text-[10px] font-semibold mt-0.5">Call</span>
+        </a>
+
+        {/* Admin Portal (One-touch owner login from phone) */}
+        <button
+          onClick={() => setIsAdminOpen(true)}
+          className="flex flex-col items-center justify-center text-gray-500 hover:text-black active:scale-95 transition-all"
+        >
+          <Lock className="w-4 h-4" />
+          <span className="text-[10px] font-semibold mt-0.5">Owner</span>
+        </button>
       </div>
 
       {/* Wishlist Drawer */}

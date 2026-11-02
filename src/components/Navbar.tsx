@@ -174,25 +174,22 @@ export const Navbar: React.FC<NavbarProps> = ({
         )}
       </div>
 
-      {/* Luxury Category Navigation Bar (Visible on Desktop & Mobile) */}
-      <nav className="bg-[#FAF7F2] border-b border-[#EADFCF] px-3 sm:px-8 py-2">
-        <div className="max-w-7xl mx-auto flex items-center justify-start md:justify-center space-x-5 sm:space-x-8 overflow-x-auto scrollbar-none text-[11px] sm:text-xs tracking-wider uppercase font-semibold text-[#4A4A4A]">
+      {/* Luxury Category Navigation Bar (Visible & Touch-Optimized on Mobile & Desktop) */}
+      <nav className="bg-[#FAF7F2] border-b border-[#EADFCF] px-2.5 sm:px-8 py-2">
+        <div className="max-w-7xl mx-auto flex items-center justify-start md:justify-center space-x-2 sm:space-x-3 overflow-x-auto scrollbar-none text-[11px] sm:text-xs tracking-wider uppercase font-semibold text-[#4A4A4A]">
           {categories.map((cat) => {
             const isActive = selectedCategory === cat;
             return (
               <button
                 key={cat}
                 onClick={() => onSelectCategory(cat)}
-                className={`py-1.5 transition-all relative group whitespace-nowrap flex-shrink-0 ${
-                  isActive ? 'text-[#B8860B] font-bold' : 'text-[#4A4A4A] hover:text-[#D4AF37]'
+                className={`py-1.5 px-3 sm:px-4 rounded-full transition-all whitespace-nowrap flex-shrink-0 text-center active:scale-95 ${
+                  isActive
+                    ? 'bg-[#141416] text-[#FAF7F2] shadow-sm font-bold ring-1 ring-[#D4AF37]'
+                    : 'bg-white/90 border border-[#EADFCF] text-[#4A4A4A] hover:text-[#D4AF37] hover:border-[#D4AF37]'
                 }`}
               >
                 <span>{cat}</span>
-                <span
-                  className={`absolute bottom-0 left-0 h-0.5 bg-[#D4AF37] transition-all ${
-                    isActive ? 'w-full' : 'w-0 group-hover:w-full'
-                  }`}
-                ></span>
               </button>
             );
           })}

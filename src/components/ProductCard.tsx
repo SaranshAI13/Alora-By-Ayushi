@@ -31,7 +31,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     <div className="group relative bg-[#FFFDF9] rounded-2xl border border-[#EADFCF] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
       
       {/* Top Image Container */}
-      <div className="relative aspect-square w-full overflow-hidden bg-[#FAF7F2]">
+      <div 
+        onClick={() => onQuickView(product)}
+        className="relative aspect-square w-full overflow-hidden bg-[#FAF7F2] cursor-pointer"
+      >
         <img
           src={product.images[0] || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1000'}
           alt={product.name}
@@ -100,10 +103,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       </div>
 
       {/* Card Body */}
-      <div className="p-3 sm:p-4 md:p-5 flex flex-col flex-1 justify-between space-y-2 sm:space-y-3">
+      <div className="p-2.5 sm:p-4 flex flex-col flex-1 justify-between space-y-1.5 sm:space-y-2.5">
         <div>
-          <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-gray-500 mb-1">
-            <span className="uppercase tracking-wider truncate">{product.category}</span>
+          <div className="flex items-center justify-between text-[9px] sm:text-[10px] text-gray-500 mb-0.5">
+            <span className="uppercase tracking-wider truncate font-semibold text-[#B8860B]">{product.category}</span>
             {product.inStock ? (
               <span className="flex items-center text-emerald-600 font-semibold whitespace-nowrap">
                 <CheckCircle2 className="w-2.5 h-2.5 mr-0.5" /> In Stock
@@ -117,26 +120,26 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
           <h3 
             onClick={() => onQuickView(product)}
-            className="font-serif text-xs sm:text-sm md:text-base font-bold text-[#141416] group-hover:text-[#AA771C] transition-colors cursor-pointer line-clamp-1"
+            className="font-serif text-xs sm:text-sm md:text-base font-bold text-[#141416] group-hover:text-[#AA771C] transition-colors cursor-pointer line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] leading-snug"
             title={product.name}
           >
             {product.name}
           </h3>
 
-          <p className="text-[11px] sm:text-xs text-gray-500 line-clamp-1 sm:line-clamp-2 mt-0.5 sm:mt-1 leading-relaxed">
+          <p className="text-[10px] sm:text-xs text-gray-500 line-clamp-1 mt-0.5 leading-relaxed">
             {product.description}
           </p>
         </div>
 
         {/* Price & Action Buttons */}
-        <div className="pt-2 border-t border-[#EADFCF]/60 flex items-center justify-between gap-1.5">
-          <div>
-            <div className="flex items-baseline space-x-1.5 sm:space-x-2">
+        <div className="pt-2 border-t border-[#EADFCF]/60 flex items-center justify-between gap-1">
+          <div className="min-w-0">
+            <div className="flex items-baseline space-x-1 sm:space-x-1.5 flex-wrap">
               <span className="font-serif text-sm sm:text-base md:text-lg font-bold text-[#141416]">
                 {settings.currencySymbol}{product.price.toLocaleString('en-IN')}
               </span>
               {product.originalPrice && product.originalPrice > product.price && (
-                <span className="text-[10px] sm:text-xs text-gray-400 line-through">
+                <span className="text-[9px] sm:text-xs text-gray-400 line-through">
                   {settings.currencySymbol}{product.originalPrice.toLocaleString('en-IN')}
                 </span>
               )}
@@ -154,7 +157,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 alert('This item is currently sold out. Message Ayushi on WhatsApp (+91 9667779443) for backorders!');
               }
             }}
-            className={`px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold flex items-center space-x-1 transition-all shadow-sm ${
+            className={`px-2 py-1.5 sm:px-3 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold flex items-center space-x-1 transition-all shadow-sm flex-shrink-0 active:scale-95 ${
               product.inStock
                 ? 'bg-[#141416] text-[#FAF7F2] hover:bg-[#25D366] hover:text-white'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
@@ -162,7 +165,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             title="Order directly on WhatsApp"
           >
             <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#25D366] group-hover:text-white flex-shrink-0" />
-            <span className="whitespace-nowrap">Order</span>
+            <span>Order</span>
           </a>
         </div>
 
