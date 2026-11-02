@@ -9,6 +9,10 @@ import { Features } from './components/Features';
 import { Footer } from './components/Footer';
 import { Product, StoreSettings } from './types';
 import { INITIAL_PRODUCTS, DEFAULT_STORE_SETTINGS, DEFAULT_CATEGORIES } from './data/initialProducts';
+import { 
+  fetchCloudProducts, fetchCloudCategories, addCloudProduct, updateCloudProduct, 
+  deleteCloudProduct, addCloudCategory, deleteCloudCategory, isSupabaseConfigured 
+} from './lib/supabase';
 import { Sparkles, SlidersHorizontal, Heart, X, MessageCircle, Phone, Grid, ShoppingBag, Lock } from 'lucide-react';
 
 export default function App() {
@@ -112,10 +116,33 @@ export default function App() {
     );
   };
 
+  // Initial Cloud Sync Effect (Loads live catalog from Supabase for all customers)
+  useEffect(() => {
+    async function syncWithCloud() {
+      if (!isSupabaseConfigured()) return;
+      try {
+        const [cloudProducts, cloudCategories] = await Promise.all([
+          fetchCloudProducts(),
+          fetchCloudCategories()
+        ]);
+        if (cloudProducts && cloudProducts.length > 0) {
+          setProducts(cloudProducts);
+        }
+        if (cloudCategories && cloudCategories.length > 0) {
+          setCategories(cloudCategories);
+        }
+      } catch (err) {
+        console.warn('Could not sync with Supabase cloud, using local fallback:', err);
+      }
+    }
+    syncWithCloud();
+  }, []);
+
   // Category Management Handlers
   const handleAddCategory = (newCat: string) => {
     if (!categories.includes(newCat)) {
       setCategories((prev) => [...prev, newCat]);
+      addCloudCategory(newCat);
     }
   };
 
@@ -125,22 +152,26 @@ export default function App() {
     if (selectedCategory === catToDelete) {
       setSelectedCategory('All');
     }
+    deleteCloudCategory(catToDelete);
   };
 
   // Product CRUD
   const handleAddProduct = (newProduct: Product) => {
     setProducts((prev) => [newProduct, ...prev]);
+    addCloudProduct(newProduct);
   };
 
   const handleUpdateProduct = (updatedProduct: Product) => {
     setProducts((prev) =>
       prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
     );
+    updateCloudProduct(updatedProduct);
   };
 
   const handleDeleteProduct = (productId: string) => {
     setProducts((prev) => prev.filter((p) => p.id !== productId));
     setWishlist((prev) => prev.filter((id) => id !== productId));
+    deleteCloudProduct(productId);
   };
 
   const handleResetCatalog = () => {
