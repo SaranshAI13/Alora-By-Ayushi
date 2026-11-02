@@ -9,13 +9,13 @@ import { Features } from './components/Features';
 import { Footer } from './components/Footer';
 import { Product, StoreSettings, Category } from './types';
 import { INITIAL_PRODUCTS, DEFAULT_STORE_SETTINGS } from './data/initialProducts';
-import { Sparkles, SlidersHorizontal, Heart, X, MessageCircle } from 'lucide-react';
+import { Sparkles, SlidersHorizontal, Heart, X, MessageCircle, Phone, Grid, ShoppingBag } from 'lucide-react';
 
 export default function App() {
   // Products State (Loaded from localStorage or initial)
   const [products, setProducts] = useState<Product[]>(() => {
     try {
-      const saved = localStorage.getItem('alora_products_v1');
+      const saved = localStorage.getItem('alora_products_v2');
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error('Error loading products from local storage', e);
@@ -23,10 +23,10 @@ export default function App() {
     return INITIAL_PRODUCTS;
   });
 
-  // Settings State
+  // Settings State (Loaded from localStorage or initial)
   const [settings, setSettings] = useState<StoreSettings>(() => {
     try {
-      const saved = localStorage.getItem('alora_settings_v1');
+      const saved = localStorage.getItem('alora_settings_v2');
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error('Error loading settings from local storage', e);
@@ -37,7 +37,7 @@ export default function App() {
   // Wishlist State
   const [wishlist, setWishlist] = useState<string[]>(() => {
     try {
-      const saved = localStorage.getItem('alora_wishlist_v1');
+      const saved = localStorage.getItem('alora_wishlist_v2');
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error('Error loading wishlist', e);
@@ -55,10 +55,10 @@ export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isWishlistDrawerOpen, setIsWishlistDrawerOpen] = useState(false);
 
-  // Sync products to localStorage whenever they change
+  // Sync products to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('alora_products_v1', JSON.stringify(products));
+      localStorage.setItem('alora_products_v2', JSON.stringify(products));
     } catch (e) {
       console.error('Failed to save products to localStorage', e);
     }
@@ -67,7 +67,7 @@ export default function App() {
   // Sync settings
   useEffect(() => {
     try {
-      localStorage.setItem('alora_settings_v1', JSON.stringify(settings));
+      localStorage.setItem('alora_settings_v2', JSON.stringify(settings));
     } catch (e) {
       console.error('Failed to save settings to localStorage', e);
     }
@@ -76,7 +76,7 @@ export default function App() {
   // Sync wishlist
   useEffect(() => {
     try {
-      localStorage.setItem('alora_wishlist_v1', JSON.stringify(wishlist));
+      localStorage.setItem('alora_wishlist_v2', JSON.stringify(wishlist));
     } catch (e) {
       console.error('Failed to save wishlist', e);
     }
@@ -130,22 +130,22 @@ export default function App() {
     return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
   });
 
-  const categoriesList = [
-    'All',
-    'Swarovski Jewellery',
-    'Necklaces & Chokers',
-    'Earrings & Jhumkas',
-    'Bracelets & Bangles',
-    'Rings',
-    'Designer Clothing',
-    'Bags & Accessories',
-    'Gifting & Combos'
+  const categoriesData = [
+    { name: 'All', emoji: '✨', label: 'All Items' },
+    { name: 'Designer Clothing', emoji: '👗', label: 'Dresses & Wear' },
+    { name: 'Swarovski Jewellery', emoji: '💎', label: 'Swarovski' },
+    { name: 'Necklaces & Chokers', emoji: '📿', label: 'Necklaces' },
+    { name: 'Earrings & Jhumkas', emoji: '✨', label: 'Earrings' },
+    { name: 'Bracelets & Bangles', emoji: '💫', label: 'Bracelets' },
+    { name: 'Rings', emoji: '💍', label: 'Rings' },
+    { name: 'Bags & Accessories', emoji: '👜', label: 'Handbags' },
+    { name: 'Gifting & Combos', emoji: '🎁', label: 'Combos' }
   ];
 
   const wishlistedProducts = products.filter((p) => wishlist.includes(p.id));
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#141416] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#FAF7F2] text-[#141416] flex flex-col font-sans pb-16 sm:pb-0">
       
       {/* Navigation */}
       <Navbar
@@ -153,7 +153,11 @@ export default function App() {
         wishlistCount={wishlist.length}
         onOpenAdmin={() => setIsAdminOpen(true)}
         onSearch={(query) => setSearchQuery(query)}
-        onSelectCategory={(cat) => setSelectedCategory(cat)}
+        onSelectCategory={(cat) => {
+          setSelectedCategory(cat);
+          const el = document.getElementById('catalog-section');
+          el?.scrollIntoView({ behavior: 'smooth' });
+        }}
         onOpenWishlist={() => setIsWishlistDrawerOpen(true)}
       />
 
@@ -167,28 +171,60 @@ export default function App() {
         }}
       />
 
+      {/* VISUAL CATEGORY SHOWCASE BAR (MOBILE & DESKTOP) */}
+      <section className="bg-white border-b border-[#EADFCF] py-5 px-4 sm:px-8 shadow-sm">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-[#B8860B] flex items-center space-x-1.5">
+              <Grid className="w-3.5 h-3.5" />
+              <span>Shop By Category</span>
+            </span>
+            <span className="text-xs text-gray-400">Swipe horizontally ➔</span>
+          </div>
+
+          <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none">
+            {categoriesData.map((cat) => (
+              <button
+                key={cat.name}
+                onClick={() => {
+                  setSelectedCategory(cat.name);
+                  const el = document.getElementById('catalog-section');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className={`flex items-center space-x-2 px-3.5 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all shadow-sm ${
+                  selectedCategory === cat.name
+                    ? 'bg-[#141416] text-[#FAF7F2] ring-2 ring-[#D4AF37]/50'
+                    : 'bg-[#FAF7F2] border border-[#EADFCF] text-gray-700 hover:border-[#D4AF37] hover:bg-white'
+                }`}
+              >
+                <span className="text-sm">{cat.emoji}</span>
+                <span>{cat.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Main Catalog Section */}
-      <section id="catalog-section" className="max-w-7xl w-full mx-auto px-4 sm:px-8 py-12 sm:py-16 space-y-8 flex-1">
+      <section id="catalog-section" className="max-w-7xl w-full mx-auto px-3 sm:px-8 py-8 sm:py-14 space-y-6 flex-1">
         
         {/* Section Heading & Filter Bar */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#EADFCF] pb-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 border-b border-[#EADFCF] pb-4">
           <div className="space-y-1">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[#B8860B] flex items-center space-x-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Curated Boutique Catalog</span>
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#141416]">
-              {selectedCategory === 'All' ? 'Signature Collection' : selectedCategory}
+            <h2 className="font-serif text-2xl sm:text-4xl font-bold text-[#141416]">
+              {selectedCategory === 'All' ? 'All Curated Pieces' : selectedCategory}
             </h2>
             <p className="text-xs text-gray-500">
-              Showing {sortedProducts.length} handcrafted pieces • Tap WhatsApp to order directly
+              Showing {sortedProducts.length} items • Instant Order via WhatsApp (+91 9667779443)
             </p>
           </div>
 
           {/* Sort Selector */}
-          <div className="flex items-center space-x-2 text-xs">
-            <SlidersHorizontal className="w-4 h-4 text-gray-400" />
-            <span className="text-gray-500 font-medium">Sort by:</span>
+          <div className="flex items-center justify-between md:justify-end space-x-2 text-xs pt-1 md:pt-0">
+            <div className="flex items-center space-x-1 text-gray-500">
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <span>Sort:</span>
+            </div>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
@@ -201,26 +237,9 @@ export default function App() {
           </div>
         </div>
 
-        {/* Category Pills (Quick Switcher) */}
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-          {categoriesList.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all shadow-sm ${
-                selectedCategory === cat
-                  ? 'bg-[#141416] text-[#FAF7F2]'
-                  : 'bg-white border border-[#EADFCF] text-gray-700 hover:border-[#D4AF37] hover:text-[#141416]'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Product Grid */}
+        {/* 2-COLUMN ON MOBILE, 3 ON TABLET, 4 ON DESKTOP */}
         {sortedProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             {sortedProducts.map((product) => (
               <ProductCard
                 key={product.id}
@@ -239,7 +258,7 @@ export default function App() {
             </div>
             <h3 className="font-serif text-xl font-bold text-[#141416]">No items found</h3>
             <p className="text-xs text-gray-500 max-w-sm mx-auto">
-              We couldn't find any products matching your filters. Try switching category or resetting search.
+              We couldn't find any products matching your search. Tap below to reset.
             </p>
             <button
               onClick={() => {
@@ -294,6 +313,27 @@ export default function App() {
         onResetCatalog={handleResetCatalog}
         onImportCatalog={handleImportCatalog}
       />
+
+      {/* STICKY BOTTOM MOBILE QUICK CONTACT BAR */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#EADFCF] px-4 py-2.5 shadow-2xl flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Custom Orders & Inquiries</p>
+          <a href="tel:+919667779443" className="text-xs font-bold text-[#141416] font-mono flex items-center space-x-1">
+            <Phone className="w-3 h-3 text-[#B8860B]" />
+            <span>+91 9667779443</span>
+          </a>
+        </div>
+
+        <a
+          href={`https://wa.me/${settings.whatsappNumber}?text=Hi%20Ayushi!%20I'm%20browsing%20Alora%20and%20would%20love%20to%20place%20an%20order.`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-4 py-2 bg-[#25D366] text-white rounded-xl text-xs font-bold flex items-center space-x-1.5 shadow-md flex-shrink-0"
+        >
+          <MessageCircle className="w-3.5 h-3.5" />
+          <span>Chat on WhatsApp</span>
+        </a>
+      </div>
 
       {/* Wishlist Drawer */}
       {isWishlistDrawerOpen && (

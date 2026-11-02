@@ -21,9 +21,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) 
     : 0;
 
-  // WhatsApp order link
+  // WhatsApp order link directed to Ayushi
   const whatsappOrderMessage = encodeURIComponent(
-    `Hi Ayushi! ✨ I would like to order this item from Alora:\n\n*Product:* ${product.name}\n*Price:* ${settings.currencySymbol}${product.price.toLocaleString('en-IN')}\n*Category:* ${product.category}\n\nIs this in stock for delivery?`
+    `Hi Ayushi! ✨ I would like to order this piece from Alora:\n\n*Product:* ${product.name}\n*Price:* ${settings.currencySymbol}${product.price.toLocaleString('en-IN')}\n*Category:* ${product.category}\n\nPlease confirm availability!`
   );
   const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${whatsappOrderMessage}`;
 
@@ -41,8 +41,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Tag Badge */}
         {product.tag && (
-          <div className="absolute top-3 left-3 z-10">
-            <span className={`inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-sm ${
+          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10">
+            <span className={`inline-flex items-center space-x-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold tracking-wider uppercase shadow-sm ${
               product.tag === 'Bestseller' ? 'bg-[#141416] text-[#E5C492]' :
               product.tag === 'Swarovski Certified' ? 'bg-[#D4AF37] text-white' :
               product.tag === 'New Launch' ? 'bg-[#E8B4B8] text-[#141416]' :
@@ -57,7 +57,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Discount Badge */}
         {discountPercent > 0 && (
-          <div className="absolute bottom-3 left-3 z-10 bg-rose-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm">
+          <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 z-10 bg-rose-600 text-white text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm">
             {discountPercent}% OFF
           </div>
         )}
@@ -68,18 +68,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             e.stopPropagation();
             onToggleWishlist(product.id);
           }}
-          className={`absolute top-3 right-3 z-10 p-2 rounded-full backdrop-blur-md transition-all shadow-sm ${
+          className={`absolute top-2 right-2 sm:top-3 sm:right-3 z-10 p-1.5 sm:p-2 rounded-full backdrop-blur-md transition-all shadow-sm ${
             isWishlisted 
               ? 'bg-rose-50 text-rose-500 scale-110' 
               : 'bg-white/80 text-gray-600 hover:text-rose-500 hover:bg-white'
           }`}
           aria-label="Save to Wishlist"
         >
-          <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
+          <Heart className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isWishlisted ? 'fill-current' : ''}`} />
         </button>
 
-        {/* Quick View Hover Overlay */}
-        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-4">
+        {/* Quick View Hover Overlay (Desktop) */}
+        <div className="hidden md:flex absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity items-center justify-center p-4">
           <button
             onClick={() => onQuickView(product)}
             className="px-4 py-2 bg-white/95 text-[#141416] text-xs font-semibold uppercase tracking-wider rounded-full shadow-lg hover:bg-[#D4AF37] hover:text-white transition-colors flex items-center space-x-1.5"
@@ -92,7 +92,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* Out of Stock Overlay */}
         {!product.inStock && (
           <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px] flex items-center justify-center z-20">
-            <span className="bg-[#141416] text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">
+            <span className="bg-[#141416] text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest px-3 py-1 sm:px-4 sm:py-1.5 rounded-full shadow-lg">
               Sold Out
             </span>
           </div>
@@ -100,43 +100,43 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       </div>
 
       {/* Card Body */}
-      <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between space-y-3">
+      <div className="p-3 sm:p-4 md:p-5 flex flex-col flex-1 justify-between space-y-2 sm:space-y-3">
         <div>
-          <div className="flex items-center justify-between text-[11px] text-gray-500 mb-1">
-            <span className="uppercase tracking-wider">{product.category}</span>
+          <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-gray-500 mb-1">
+            <span className="uppercase tracking-wider truncate">{product.category}</span>
             {product.inStock ? (
-              <span className="flex items-center text-emerald-600 text-[10px] font-semibold">
-                <CheckCircle2 className="w-3 h-3 mr-0.5" /> In Stock
+              <span className="flex items-center text-emerald-600 font-semibold whitespace-nowrap">
+                <CheckCircle2 className="w-2.5 h-2.5 mr-0.5" /> In Stock
               </span>
             ) : (
-              <span className="flex items-center text-rose-500 text-[10px] font-semibold">
-                <XCircle className="w-3 h-3 mr-0.5" /> Sold Out
+              <span className="flex items-center text-rose-500 font-semibold whitespace-nowrap">
+                <XCircle className="w-2.5 h-2.5 mr-0.5" /> Sold Out
               </span>
             )}
           </div>
 
           <h3 
             onClick={() => onQuickView(product)}
-            className="font-serif text-sm sm:text-base font-bold text-[#141416] group-hover:text-[#AA771C] transition-colors cursor-pointer line-clamp-1"
+            className="font-serif text-xs sm:text-sm md:text-base font-bold text-[#141416] group-hover:text-[#AA771C] transition-colors cursor-pointer line-clamp-1"
             title={product.name}
           >
             {product.name}
           </h3>
 
-          <p className="text-xs text-gray-500 line-clamp-2 mt-1 leading-relaxed">
+          <p className="text-[11px] sm:text-xs text-gray-500 line-clamp-1 sm:line-clamp-2 mt-0.5 sm:mt-1 leading-relaxed">
             {product.description}
           </p>
         </div>
 
         {/* Price & Action Buttons */}
-        <div className="pt-2 border-t border-[#EADFCF]/60 flex items-center justify-between">
+        <div className="pt-2 border-t border-[#EADFCF]/60 flex items-center justify-between gap-1.5">
           <div>
-            <div className="flex items-baseline space-x-2">
-              <span className="font-serif text-base sm:text-lg font-bold text-[#141416]">
+            <div className="flex items-baseline space-x-1.5 sm:space-x-2">
+              <span className="font-serif text-sm sm:text-base md:text-lg font-bold text-[#141416]">
                 {settings.currencySymbol}{product.price.toLocaleString('en-IN')}
               </span>
               {product.originalPrice && product.originalPrice > product.price && (
-                <span className="text-xs text-gray-400 line-through">
+                <span className="text-[10px] sm:text-xs text-gray-400 line-through">
                   {settings.currencySymbol}{product.originalPrice.toLocaleString('en-IN')}
                 </span>
               )}
@@ -151,18 +151,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             onClick={(e) => {
               if (!product.inStock) {
                 e.preventDefault();
-                alert('This item is currently sold out. You can message Ayushi on Instagram for backorders!');
+                alert('This item is currently sold out. Message Ayushi on WhatsApp (+91 9667779443) for backorders!');
               }
             }}
-            className={`px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition-all shadow-sm ${
+            className={`px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold flex items-center space-x-1 transition-all shadow-sm ${
               product.inStock
                 ? 'bg-[#141416] text-[#FAF7F2] hover:bg-[#25D366] hover:text-white'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
             }`}
             title="Order directly on WhatsApp"
           >
-            <MessageCircle className="w-3.5 h-3.5 text-[#25D366] group-hover:text-white" />
-            <span>Order</span>
+            <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#25D366] group-hover:text-white flex-shrink-0" />
+            <span className="whitespace-nowrap">Order</span>
           </a>
         </div>
 

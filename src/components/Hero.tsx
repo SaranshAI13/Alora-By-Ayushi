@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, ArrowRight, MessageCircle } from 'lucide-react';
+import { Sparkles, ArrowRight, MessageCircle, Phone, ShieldCheck, Truck, Gift } from 'lucide-react';
 import { StoreSettings } from '../types';
 
 interface HeroProps {
@@ -14,122 +14,134 @@ export const Hero: React.FC<HeroProps> = ({ settings, onExplore }) => {
       <div className="absolute top-10 left-1/4 w-96 h-96 bg-[#D4AF37]/10 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-[#E8B4B8]/15 rounded-full blur-3xl pointer-events-none"></div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-14 sm:py-20 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-10 sm:py-16 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center">
           
           {/* Left Hero Text */}
-          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <div className="inline-flex items-center space-x-2 bg-white/80 border border-[#D5C7B3] px-4 py-1.5 rounded-full shadow-sm">
+          <div className="lg:col-span-7 space-y-5 text-center lg:text-left">
+            
+            {/* Boutique Badge */}
+            <div className="inline-flex items-center space-x-2 bg-white/90 border border-[#D5C7B3] px-3.5 py-1.5 rounded-full shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span className="text-[11px] font-semibold tracking-widest uppercase text-[#B8860B]">
+              <span className="text-[10px] sm:text-[11px] font-bold tracking-widest uppercase text-[#B8860B]">
                 Curated Luxury By Ayushi
               </span>
             </div>
 
-            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-[#141416] tracking-tight leading-[1.15]">
+            {/* Main Headline (Replaced Swarovski crystal with Branded Items & Luxury Fashion) */}
+            <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold text-[#141416] tracking-tight leading-[1.15]">
               Timeless Radiance, <br className="hidden sm:inline" />
               <span className="font-cormorant italic font-normal text-[#AA771C]">
-                Swarovski Crystals
+                Branded Luxury Items
               </span>{' '}
               & Haute Couture
             </h1>
 
-            <p className="text-sm sm:text-base text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
-              Indulge in certified Austrian Swarovski jewelry, designer dresses, and boutique statement accessories. 
-              Handcrafted for contemporary women who love to shine with effortless grace.
+            <p className="text-xs sm:text-sm md:text-base text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
+              Explore bespoke branded jewellery, Swarovski crystals, luxury dresses, premium handbags, and trending girl accessories. Curated with love for girls who adore premium elegance.
             </p>
 
+            {/* Contact Highlight Pill with Ayushi's Number */}
+            <div className="inline-flex items-center space-x-2 bg-[#25D366]/10 border border-[#25D366]/30 px-3.5 py-2 rounded-2xl text-xs text-[#141416] font-semibold">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#25D366] animate-ping"></span>
+              <span>Direct WhatsApp & Call Orders:</span>
+              <a href="tel:+919667779443" className="font-mono text-[#1E7E34] hover:underline font-bold">
+                +91 9667779443
+              </a>
+            </div>
+
             {/* Call To Actions */}
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-1">
               <button
-                onClick={() => onExplore('Swarovski Jewellery')}
-                className="w-full sm:w-auto px-8 py-3.5 bg-[#141416] text-[#FAF7F2] text-xs font-semibold uppercase tracking-widest rounded-full hover:bg-[#D4AF37] hover:text-[#141416] transition-all shadow-md flex items-center justify-center space-x-2 group"
+                onClick={() => onExplore('All')}
+                className="w-full sm:w-auto px-7 py-3.5 bg-[#141416] text-[#FAF7F2] text-xs font-bold uppercase tracking-widest rounded-full hover:bg-[#D4AF37] hover:text-[#141416] transition-all shadow-md flex items-center justify-center space-x-2 group"
               >
-                <span>Shop Swarovski</span>
+                <span>Explore All Collections</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
 
               <a
-                href={`https://wa.me/${settings.whatsappNumber}?text=Hi%20Ayushi!%20I%20want%20to%20explore%20your%20latest%20Swarovski%20and%20fashion%20collection.`}
+                href={`https://wa.me/${settings.whatsappNumber}?text=Hi%20Ayushi!%20I'm%20visiting%20Alora%20and%20want%20to%20place%20a%20custom%20order.`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto px-7 py-3.5 bg-white/90 border border-[#D5C7B3] text-[#141416] text-xs font-semibold uppercase tracking-widest rounded-full hover:border-[#25D366] hover:text-[#25D366] transition-all flex items-center justify-center space-x-2 shadow-sm"
+                className="w-full sm:w-auto px-6 py-3.5 bg-[#25D366] text-white text-xs font-bold uppercase tracking-widest rounded-full hover:brightness-105 transition-all flex items-center justify-center space-x-2 shadow-sm"
               >
-                <MessageCircle className="w-4 h-4 text-[#25D366]" />
-                <span>Custom Order on WhatsApp</span>
+                <MessageCircle className="w-4 h-4" />
+                <span>Chat on WhatsApp: 9667779443</span>
               </a>
             </div>
 
             {/* Quick Micro Value Props */}
-            <div className="pt-8 grid grid-cols-3 gap-4 border-t border-[#EADFCF]/80 max-w-lg mx-auto lg:mx-0 text-left">
-              <div className="space-y-1">
-                <span className="font-serif text-lg font-bold text-[#141416]">100%</span>
-                <p className="text-[11px] text-gray-500 font-medium leading-tight">Certified Swarovski Elements</p>
+            <div className="pt-6 grid grid-cols-3 gap-3 border-t border-[#EADFCF]/80 max-w-lg mx-auto lg:mx-0 text-left">
+              <div className="space-y-0.5">
+                <span className="font-serif text-base sm:text-lg font-bold text-[#141416]">100%</span>
+                <p className="text-[10px] sm:text-[11px] text-gray-500 font-medium leading-tight">Branded Quality Guarantee</p>
               </div>
-              <div className="space-y-1">
-                <span className="font-serif text-lg font-bold text-[#141416]">Pan-India</span>
-                <p className="text-[11px] text-gray-500 font-medium leading-tight">Express Delivery with Tracking</p>
+              <div className="space-y-0.5">
+                <span className="font-serif text-base sm:text-lg font-bold text-[#141416]">Pan-India</span>
+                <p className="text-[10px] sm:text-[11px] text-gray-500 font-medium leading-tight">Express Doorstep Delivery</p>
               </div>
-              <div className="space-y-1">
-                <span className="font-serif text-lg font-bold text-[#141416]">Bespoke</span>
-                <p className="text-[11px] text-gray-500 font-medium leading-tight">Luxury Velvet Gift Box Included</p>
+              <div className="space-y-0.5">
+                <span className="font-serif text-base sm:text-lg font-bold text-[#141416]">Ayushi</span>
+                <p className="text-[10px] sm:text-[11px] text-gray-500 font-medium leading-tight">Direct Personal Concierge</p>
               </div>
             </div>
           </div>
 
           {/* Right Hero Visual (Editorial Magazine Showcase) */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative mx-auto max-w-sm sm:max-w-md">
+          <div className="lg:col-span-5 relative mt-4 lg:mt-0">
+            <div className="relative mx-auto max-w-xs sm:max-w-md">
+              
               {/* Main Showcase Card */}
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-white">
                 <img
                   src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1000&auto=format&fit=crop"
-                  alt="Alora Swarovski Pendant"
-                  className="w-full h-[440px] sm:h-[480px] object-cover hover:scale-105 transition-transform duration-700"
+                  alt="Alora Boutique Showcase"
+                  className="w-full h-[380px] sm:h-[480px] object-cover hover:scale-105 transition-transform duration-700"
                 />
 
                 {/* Floating Badge on Card */}
-                <div className="absolute bottom-5 left-5 right-5 bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-[#EADFCF] shadow-lg flex items-center justify-between">
+                <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-2xl p-3.5 border border-[#EADFCF] shadow-lg flex items-center justify-between">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-widest text-[#B8860B]">
-                      Signature Drop
+                      Featured Drop
                     </span>
-                    <h3 className="font-serif text-sm font-bold text-[#141416]">
-                      Austrian Starlight Solitaire
+                    <h3 className="font-serif text-xs sm:text-sm font-bold text-[#141416]">
+                      Austrian Starlight Solitaire Set
                     </h3>
                     <span className="text-xs font-semibold text-[#141416]">
-                      ₹1,899 <span className="text-gray-400 line-through text-[11px]">₹2,899</span>
+                      ₹1,899 <span className="text-gray-400 line-through text-[10px]">₹2,899</span>
                     </span>
                   </div>
                   <button
                     onClick={() => onExplore('Swarovski Jewellery')}
-                    className="p-2.5 bg-[#141416] text-white rounded-full hover:bg-[#D4AF37] hover:text-[#141416] transition-colors"
+                    className="p-2 bg-[#141416] text-white rounded-full hover:bg-[#D4AF37] hover:text-[#141416] transition-colors"
                     aria-label="View Product"
                   >
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
 
               {/* Floating Real Boutique Logo Badge */}
-              <div className="absolute -top-5 -left-5 bg-white shadow-xl rounded-2xl p-2.5 border-2 border-[#D4AF37]/50 hidden sm:flex items-center space-x-2.5 animate-float backdrop-blur-md">
-                <div className="w-10 h-10 rounded-full overflow-hidden shadow-inner ring-1 ring-[#D4AF37]">
+              <div className="absolute -top-4 -left-3 sm:-left-5 bg-white shadow-xl rounded-2xl p-2 border-2 border-[#D4AF37]/50 flex items-center space-x-2 backdrop-blur-md">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden shadow-inner ring-1 ring-[#D4AF37]">
                   <img src="/alora-logo-circle.png" alt="Alora Emblem" className="w-full h-full object-cover" />
                 </div>
-                <div className="pr-2">
-                  <p className="text-[10px] font-bold text-[#B8860B] uppercase tracking-wider">Official Boutique</p>
+                <div className="pr-1.5">
+                  <p className="text-[9px] font-bold text-[#B8860B] uppercase tracking-wider">Official Boutique</p>
                   <p className="text-xs font-serif font-bold text-[#141416]">Alora by Ayushi</p>
                 </div>
               </div>
 
               {/* Floating Instagram Accent Pill */}
-              <div className="absolute -bottom-4 -right-4 bg-white shadow-xl rounded-2xl p-3 border border-[#EADFCF] hidden sm:flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+              <div className="absolute -bottom-3 -right-2 sm:-right-4 bg-white shadow-xl rounded-2xl p-2.5 border border-[#EADFCF] flex items-center space-x-2">
+                <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center text-white text-[11px] font-bold">
                   📸
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-gray-500">Instagram</p>
-                  <p className="text-xs font-bold text-[#141416]">@alora_by_ayushi_</p>
+                  <p className="text-[9px] font-bold text-gray-500">Instagram</p>
+                  <p className="text-[11px] font-bold text-[#141416]">@alora_by_ayushi_</p>
                 </div>
               </div>
 

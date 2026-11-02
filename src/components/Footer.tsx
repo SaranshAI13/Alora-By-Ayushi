@@ -1,5 +1,5 @@
 import React from 'react';
-import { Instagram, MessageCircle, Heart, Lock } from 'lucide-react';
+import { Instagram, MessageCircle, Heart, Lock, Phone } from 'lucide-react';
 import { StoreSettings } from '../types';
 import { Logo } from './Logo';
 
@@ -11,11 +11,11 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ settings, onOpenAdmin, onSelectCategory }) => {
   return (
-    <footer className="bg-[#141416] text-[#FAF7F2] border-t border-[#2A2A2A] pt-16 pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-12">
+    <footer className="bg-[#141416] text-[#FAF7F2] border-t border-[#2A2A2A] pt-14 pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-10">
         
         {/* Top 3-Column Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-10">
           
           {/* Brand Info with Official Logo Emblem */}
           <div className="md:col-span-5 space-y-4 text-center md:text-left">
@@ -23,8 +23,8 @@ export const Footer: React.FC<FooterProps> = ({ settings, onOpenAdmin, onSelectC
               <Logo size="lg" showBadge={true} theme="dark" />
             </div>
 
-            <p className="text-xs text-gray-400 max-w-sm leading-relaxed">
-              Curated luxury boutique showcasing certified Austrian Swarovski crystal jewelry, bespoke designer clothing, and high-glamour accessories. Handcrafted with passion by Ayushi.
+            <p className="text-xs text-gray-400 max-w-sm leading-relaxed mx-auto md:mx-0">
+              Curated luxury boutique showcasing branded girls fashion, Austrian crystal jewellery, designer dresses, and high-glamour accessories. Handcrafted with passion by Ayushi.
             </p>
 
             <div className="flex items-center justify-center md:justify-start space-x-3 pt-2">
@@ -33,7 +33,7 @@ export const Footer: React.FC<FooterProps> = ({ settings, onOpenAdmin, onSelectC
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#E1306C] flex items-center justify-center text-white transition-colors"
-                title="Instagram"
+                title="Instagram @alora_by_ayushi_"
               >
                 <Instagram className="w-4 h-4" />
               </a>
@@ -43,9 +43,17 @@ export const Footer: React.FC<FooterProps> = ({ settings, onOpenAdmin, onSelectC
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#25D366] flex items-center justify-center text-white transition-colors"
-                title="WhatsApp Direct"
+                title="WhatsApp Direct +91 9667779443"
               >
                 <MessageCircle className="w-4 h-4" />
+              </a>
+
+              <a
+                href="tel:+919667779443"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#D4AF37] hover:text-black flex items-center justify-center text-white transition-colors"
+                title="Call Ayushi: +91 9667779443"
+              >
+                <Phone className="w-4 h-4" />
               </a>
             </div>
           </div>
@@ -57,56 +65,67 @@ export const Footer: React.FC<FooterProps> = ({ settings, onOpenAdmin, onSelectC
             </h4>
             <ul className="space-y-2 text-gray-400 font-medium">
               <li>
+                <button onClick={() => onSelectCategory('Designer Clothing')} className="hover:text-white transition-colors">
+                  👗 Branded Dresses & Haute Couture
+                </button>
+              </li>
+              <li>
                 <button onClick={() => onSelectCategory('Swarovski Jewellery')} className="hover:text-white transition-colors">
-                  Swarovski Signature Collection
+                  💎 Austrian Swarovski Jewellery
                 </button>
               </li>
               <li>
                 <button onClick={() => onSelectCategory('Necklaces & Chokers')} className="hover:text-white transition-colors">
-                  Necklaces & Royal Chokers
+                  📿 Statement Chokers & Necklaces
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectCategory('Earrings & Jhumkas')} className="hover:text-white transition-colors">
-                  Crystal Chandelier Earrings
+                <button onClick={() => onSelectCategory('Bags & Accessories')} className="hover:text-white transition-colors">
+                  👜 Branded Handbags & Accessories
                 </button>
               </li>
               <li>
                 <button onClick={() => onSelectCategory('Bracelets & Bangles')} className="hover:text-white transition-colors">
-                  Tennis Bracelets & Bangles
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onSelectCategory('Designer Clothing')} className="hover:text-white transition-colors">
-                  Haute Couture & Silk Dresses
+                  💫 Tennis Bracelets & Bangles
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* Direct Concierge Help */}
-          <div className="md:col-span-3 space-y-3 text-center md:text-left text-xs">
+          {/* Direct Concierge Help & Phone Contact */}
+          <div className="md:col-span-3 space-y-3 text-center md:text-left text-xs bg-white/5 p-4 rounded-2xl border border-white/10">
             <h4 className="font-bold text-[#D4AF37] uppercase tracking-widest text-[11px]">
-              Ayushi's Concierge
+              Ayushi's Direct Concierge
             </h4>
-            <p className="text-gray-400 leading-relaxed">
-              Have questions about sizing, customization, or gift packaging? Chat directly with Ayushi on WhatsApp.
+            <p className="text-gray-400 leading-relaxed text-[11px]">
+              For custom orders, sizing assistance, or instant delivery queries:
             </p>
-            <a
-              href={`https://wa.me/${settings.whatsappNumber}?text=Hi%20Ayushi!%20Need%20some%20assistance%20picking%20a%20gift.`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center space-x-2 px-5 py-2.5 bg-[#25D366] text-white font-bold rounded-xl shadow-md hover:brightness-110 transition-all"
-            >
-              <MessageCircle className="w-4 h-4" />
-              <span>WhatsApp Ayushi</span>
-            </a>
+            
+            <div className="space-y-1.5 pt-1">
+              <a
+                href="tel:+919667779443"
+                className="flex items-center justify-center md:justify-start space-x-2 text-white font-mono font-bold hover:text-[#D4AF37] transition-colors"
+              >
+                <Phone className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>+91 9667779443</span>
+              </a>
+
+              <a
+                href={`https://wa.me/${settings.whatsappNumber}?text=Hi%20Ayushi!%20Need%20some%20assistance%20picking%20a%20gift.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-2.5 px-4 bg-[#25D366] text-white font-bold rounded-xl shadow-md hover:brightness-110 transition-all flex items-center justify-center space-x-1.5"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>WhatsApp: 9667779443</span>
+              </a>
+            </div>
           </div>
 
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between text-[11px] text-gray-500 gap-4">
+        <div className="pt-6 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between text-[11px] text-gray-500 gap-3">
           <p>
             © {new Date().getFullYear()} <strong className="text-gray-300">Alora by Ayushi</strong>. All Rights Reserved.
           </p>
