@@ -41,7 +41,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  // Authentication State with new PIN 'aashi12345'
+  // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [enteredPin, setEnteredPin] = useState('');
   const [pinError, setPinError] = useState(false);
@@ -72,7 +72,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const backupInputRef = useRef<HTMLInputElement>(null);
 
-  // PIN Verification (Supports updated PIN 'aashi12345')
+  // Secret PIN Verification
   const handlePinSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (enteredPin === settings.adminPin || enteredPin === 'aashi12345') {
@@ -247,7 +247,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       {/* Admin Container Card */}
       <div className="relative bg-[#FFFDF9] rounded-3xl border border-[#EADFCF] max-w-4xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
         
-        {/* Top Header */}
+        {/* Top Header (Clean, No PIN Leak) */}
         <div className="bg-[#141416] text-[#FAF7F2] px-6 py-4 flex items-center justify-between border-b border-[#2A2A2A]">
           <div className="flex items-center space-x-2">
             <span className="text-xl">👑</span>
@@ -255,7 +255,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               Ayushi's Boutique Management Portal
             </h3>
             <span className="text-[10px] bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40 px-2.5 py-0.5 rounded-full font-mono uppercase">
-              PIN: aashi12345
+              Protected Area
             </span>
           </div>
 
@@ -268,7 +268,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           </button>
         </div>
 
-        {/* Gate 1: PIN Authentication */}
+        {/* Gate 1: PIN Authentication (No visible hints!) */}
         {!isAuthenticated ? (
           <div className="p-8 sm:p-12 text-center max-w-sm mx-auto space-y-6 my-auto">
             <div className="w-16 h-16 rounded-full bg-[#FAF7F2] border-2 border-[#D4AF37] flex items-center justify-center mx-auto shadow-md text-2xl">
@@ -276,7 +276,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             </div>
 
             <div className="space-y-1">
-              <h4 className="font-serif text-xl font-bold text-[#141416]">
+              <h4 className="font-serif text-2xl font-bold text-[#141416]">
                 Owner Security Gate
               </h4>
               <p className="text-xs text-gray-500">
@@ -288,22 +288,22 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               <div>
                 <input
                   type="password"
-                  placeholder="Enter PIN (aashi12345)..."
+                  placeholder="Enter Private PIN..."
                   value={enteredPin}
                   onChange={(e) => setEnteredPin(e.target.value)}
-                  className="w-full text-center tracking-widest text-lg font-mono py-2.5 px-4 bg-white border border-[#D5C7B3] rounded-xl focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]"
+                  className="w-full text-center tracking-widest text-lg font-mono py-3 px-4 bg-white border-2 border-[#D5C7B3] focus:border-[#D4AF37] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 shadow-inner"
                   autoFocus
                 />
                 {pinError && (
-                  <p className="text-xs text-rose-500 mt-1.5 font-medium">
-                    Incorrect PIN. Try: aashi12345
+                  <p className="text-xs text-rose-500 mt-2 font-semibold">
+                    Access Denied: Incorrect PIN
                   </p>
                 )}
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3 bg-[#141416] text-[#FAF7F2] text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#D4AF37] hover:text-[#141416] transition-all shadow-md"
+                className="w-full py-3.5 bg-[#141416] text-[#FAF7F2] text-xs font-bold uppercase tracking-wider rounded-2xl hover:bg-[#D4AF37] hover:text-[#141416] transition-all shadow-md"
               >
                 Unlock Dashboard 👑
               </button>
@@ -668,7 +668,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 </div>
               )}
 
-              {/* TAB 3: DYNAMIC CATEGORY MANAGER (NEW FEATURE!) */}
+              {/* TAB 3: DYNAMIC CATEGORY MANAGER */}
               {activeTab === 'categories' && (
                 <div className="space-y-6 max-w-xl mx-auto text-xs">
                   <div className="border-b border-[#EADFCF] pb-2">
@@ -805,12 +805,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   <div>
                     <label className="block font-bold text-gray-700 mb-1">Change Admin Portal PIN</label>
                     <input
-                      type="text"
+                      type="password"
                       value={tempSettings.adminPin}
                       onChange={(e) => setTempSettings({ ...tempSettings, adminPin: e.target.value })}
                       className="w-full bg-white border border-[#D5C7B3] rounded-xl px-3.5 py-2 text-[#141416] font-mono focus:outline-none focus:border-[#D4AF37]"
                     />
-                    <span className="text-[10px] text-gray-400 mt-1 block">Current PIN is: aashi12345</span>
                   </div>
 
                   <div className="pt-2">
